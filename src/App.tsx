@@ -1,5 +1,8 @@
 import { Dropzone } from './components/Dropzone';
 import { FrameTable } from './components/FrameTable';
+import { BulkEditBar } from './components/BulkEditBar';
+import { SidePanel } from './components/SidePanel';
+import { Toast } from './components/Toast';
 import { useFrameStore } from './store/useFrameStore';
 
 function App() {
@@ -20,11 +23,15 @@ function App() {
                             {selectedIds.size > 0 && (
                                 <span className="text-blue-600 font-medium">{selectedIds.size}개 선택됨</span>
                             )}
+                            <span className="text-xs text-gray-400">행 클릭 시 편집</span>
                         </div>
+                        <BulkEditBar />
                         <FrameTable />
                     </div>
                 )}
             </main>
+            <SidePanel />
+            <Toast />
         </div>
     );
 }

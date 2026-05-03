@@ -8,7 +8,7 @@ const EXIF_TAGS = [
     'LensModel',
     'FNumber',
     'ExposureTime',
-    'ISOSpeedRatings',
+    'ISO',
     'UserComment',
 ] as const;
 
@@ -23,12 +23,8 @@ export async function readExif(file: File): Promise<FrameMeta> {
             model: typeof data.Model === 'string' ? data.Model.trim() || null : null,
             lensModel: typeof data.LensModel === 'string' ? data.LensModel.trim() || null : null,
             fNumber: typeof data.FNumber === 'number' ? data.FNumber : null,
-            exposureTime: typeof data.ExposureTime === 'number' ? data.ExposureTime : null,
-            iso: Array.isArray(data.ISOSpeedRatings)
-                ? data.ISOSpeedRatings[0] ?? null
-                : typeof data.ISOSpeedRatings === 'number'
-                  ? data.ISOSpeedRatings
-                  : null,
+            exposureTime: typeof data.ExposureTime === 'number' ? formatShutter(data.ExposureTime) : null,
+            iso: typeof data.ISO === 'number' ? data.ISO : null,
             userComment: typeof data.UserComment === 'string' ? data.UserComment || null : null,
         };
     } catch {
@@ -47,6 +43,12 @@ export async function readThumbnail(file: File): Promise<string | null> {
         // no thumbnail in EXIF
     }
     return null;
+}
+
+function formatShutter(val: number): string {
+    if (val >= 1) return `${val}"`;
+    const inv = Math.round(1 / val);
+    return `1/${inv}`;
 }
 
 function emptyMeta(): FrameMeta {

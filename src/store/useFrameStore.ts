@@ -1,20 +1,27 @@
 import { create } from 'zustand';
-import type { FrameItem } from '../types/frame';
+import type { FrameItem, FrameMeta } from '../types/frame';
+import { validateMeta } from '../lib/validation';
 
 interface FrameStore {
     frames: FrameItem[];
     selectedIds: Set<string>;
+    activeFrameId: string | null;
+    lastClickedId: string | null;
     addFrames: (frames: FrameItem[]) => void;
     removeFrames: (ids: string[]) => void;
     toggleSelect: (id: string, shiftHeld: boolean, lastClickedId: string | null) => void;
     selectAll: () => void;
     clearSelection: () => void;
-    lastClickedId: string | null;
+    setActiveFrameId: (id: string | null) => void;
+    updateFrameMeta: (id: string, patch: Partial<FrameMeta>) => void;
+    batchUpdateMeta: (ids: string[], patch: Partial<FrameMeta>) => void;
+    updateFrameNumber: (id: string, n: number | null) => void;
 }
 
 export const useFrameStore = create<FrameStore>((set, get) => ({
     frames: [],
     selectedIds: new Set(),
+    activeFrameId: null,
     lastClickedId: null,
 
     addFrames: (newFrames) =>
@@ -25,6 +32,7 @@ export const useFrameStore = create<FrameStore>((set, get) => ({
         set((state) => ({
             frames: state.frames.filter((f) => !idSet.has(f.id)),
             selectedIds: new Set([...state.selectedIds].filter((id) => !idSet.has(id))),
+            activeFrameId: idSet.has(state.activeFrameId ?? '') ? null : state.activeFrameId,
         }));
     },
 
@@ -51,4 +59,31 @@ export const useFrameStore = create<FrameStore>((set, get) => ({
         set((state) => ({ selectedIds: new Set(state.frames.map((f) => f.id)) })),
 
     clearSelection: () => set({ selectedIds: new Set(), lastClickedId: null }),
+
+    setActiveFrameId: (id) => set({ activeFrameId: id }),
+
+    updateFrameMeta: (id, patch) =>
+        set((state) => ({
+            frames: state.frames.map((f) => {
+                if (f.id !== id) return f;
+                const newMeta = { ...f.meta, ...patch };
+                return { ...f, meta: newMeta, errors: validateMeta(newMeta) };
+            }),
+        })),
+
+    batchUpdateMeta: (ids, patch) => {
+        const idSet = new Set(ids);
+        set((state) => ({
+            frames: state.frames.map((f) => {
+                if (!idSet.has(f.id)) return f;
+                const newMeta = { ...f.meta, ...patch };
+                return { ...f, meta: newMeta, errors: validateMeta(newMeta) };
+            }),
+        }));
+    },
+
+    updateFrameNumber: (id, n) =>
+        set((state) => ({
+            frames: state.frames.map((f) => (f.id === id ? { ...f, frameNumber: n } : f)),
+        })),
 }));

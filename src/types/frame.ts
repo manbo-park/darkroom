@@ -4,7 +4,7 @@ export interface FrameMeta {
     model: string | null;
     lensModel: string | null;
     fNumber: number | null;
-    exposureTime: number | null;
+    exposureTime: string | null;
     iso: number | null;
     userComment: string | null;
 }
