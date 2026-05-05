@@ -195,7 +195,7 @@ export function RollDetailScreen() {
         setShowEditRoll(false);
     }
 
-    async function copyFixifPayload() {
+    async function copyRollDataPayload() {
         if (!roll) return;
         const frames = roll.frames.map((frame) => {
             const lens = lenses.find((l) => l.id === frame.lensId);
@@ -244,7 +244,7 @@ export function RollDetailScreen() {
         }
         let binary = '';
         for (let i = 0; i < buf.length; i++) binary += String.fromCharCode(buf[i]);
-        const result = 'FIXIF1:' + btoa(binary);
+        const result = 'FILO1:' + btoa(binary);
 
         await navigator.clipboard.writeText(result);
         setCopied(true);
@@ -268,7 +268,7 @@ export function RollDetailScreen() {
             rightAction={
                 <div className="flex items-center">
                     <button
-                        onClick={copyFixifPayload}
+                        onClick={copyRollDataPayload}
                         className="p-2 text-film-muted hover:text-film-text transition-colors"
                         title="EXIF 데이터 복사"
                     >
@@ -634,7 +634,7 @@ export function RollDetailScreen() {
                     >
                         <Check size={13} className="text-film-accent shrink-0" />
                         <span className="font-mono text-xs text-film-text whitespace-nowrap">
-                            fixif 데이터가 클립보드에 복사되었습니다.
+                            데이터가 클립보드에 복사되었습니다.
                         </span>
                     </div>
                 </div>
