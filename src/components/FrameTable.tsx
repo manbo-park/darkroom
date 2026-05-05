@@ -1,4 +1,19 @@
 import { useState, useMemo } from 'react';
+import {
+    DndContext,
+    PointerSensor,
+    useSensor,
+    useSensors,
+    closestCenter,
+    type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+    SortableContext,
+    verticalListSortingStrategy,
+    useSortable,
+    arrayMove,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { useFrameStore } from '../store/useFrameStore';
 import type { FrameItem } from '../types/frame';
 import { ImagePreviewModal } from './ImagePreviewModal';
@@ -54,7 +69,6 @@ function getSortValue(frame: FrameItem, key: SortKey): string | number {
     }
 }
 
-
 interface SortableThProps {
     label: string;
     sortKey: SortKey;
@@ -73,7 +87,9 @@ function SortableTh({ label, sortKey, current, dir, onSort, className = '' }: So
         >
             <span className="inline-flex items-center gap-1">
                 <span className={active ? 'text-blue-600' : ''}>{label}</span>
-                <span className={`text-[10px] transition-opacity ${active ? 'opacity-100 text-blue-600' : 'opacity-0 group-hover:opacity-40'}`}>
+                <span
+                    className={`text-[10px] transition-opacity ${active ? 'opacity-100 text-blue-600' : 'opacity-0 group-hover:opacity-40'}`}
+                >
                     {active && dir === 'asc' ? '↑' : active && dir === 'desc' ? '↓' : '↕'}
                 </span>
             </span>
@@ -81,12 +97,28 @@ function SortableTh({ label, sortKey, current, dir, onSort, className = '' }: So
     );
 }
 
-function FrameRow({ frame, onPreview }: { frame: FrameItem; onPreview: (id: string) => void }) {
+interface FrameRowProps {
+    frame: FrameItem;
+    onPreview: (id: string) => void;
+    dragEnabled: boolean;
+}
+
+function FrameRow({ frame, onPreview, dragEnabled }: FrameRowProps) {
     const { selectedIds, toggleSelect, lastClickedId, activeFrameId, setActiveFrameId } =
         useFrameStore();
     const isSelected = selectedIds.has(frame.id);
     const isActive = activeFrameId === frame.id;
     const { meta } = frame;
+
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+        id: frame.id,
+        disabled: !dragEnabled,
+    });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
 
     const handleRowClick = () => {
         setActiveFrameId(isActive ? null : frame.id);
@@ -103,15 +135,42 @@ function FrameRow({ frame, onPreview }: { frame: FrameItem; onPreview: (id: stri
 
     return (
         <tr
+            ref={setNodeRef}
+            style={style}
             className={`border-b border-gray-100 cursor-pointer select-none transition-colors ${
-                isActive
-                    ? 'bg-indigo-50 hover:bg-indigo-100'
-                    : isSelected
-                      ? 'bg-blue-50 hover:bg-blue-100'
-                      : 'hover:bg-gray-50'
+                isDragging
+                    ? 'opacity-50 bg-blue-50'
+                    : isActive
+                      ? 'bg-indigo-50 hover:bg-indigo-100'
+                      : isSelected
+                        ? 'bg-blue-50 hover:bg-blue-100'
+                        : 'hover:bg-gray-50'
             }`}
             onClick={handleRowClick}
         >
+            {dragEnabled && (
+                <td className="px-1 py-2 w-6" onClick={(e) => e.stopPropagation()}>
+                    <button
+                        {...attributes}
+                        {...listeners}
+                        className="cursor-grab active:cursor-grabbing p-0.5 text-gray-300 hover:text-gray-500 transition-colors"
+                        tabIndex={-1}
+                    >
+                        <svg
+                            className="w-3.5 h-3.5"
+                            viewBox="0 0 16 16"
+                            fill="currentColor"
+                        >
+                            <circle cx="5" cy="4" r="1.2" />
+                            <circle cx="11" cy="4" r="1.2" />
+                            <circle cx="5" cy="8" r="1.2" />
+                            <circle cx="11" cy="8" r="1.2" />
+                            <circle cx="5" cy="12" r="1.2" />
+                            <circle cx="11" cy="12" r="1.2" />
+                        </svg>
+                    </button>
+                </td>
+            )}
             <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
                 <input
                     type="checkbox"
@@ -143,7 +202,10 @@ function FrameRow({ frame, onPreview }: { frame: FrameItem; onPreview: (id: stri
             <td className="px-3 py-2 text-center text-sm text-gray-600 tabular-nums">
                 {frame.frameNumber ?? '—'}
             </td>
-            <td className="px-3 py-2 text-sm text-gray-700 max-w-[180px] truncate" title={frame.file.name}>
+            <td
+                className="px-3 py-2 text-sm text-gray-700 max-w-[180px] truncate"
+                title={frame.file.name}
+            >
                 {frame.file.name}
             </td>
             <td className="px-3 py-2 text-sm text-gray-600 whitespace-nowrap tabular-nums">
@@ -152,7 +214,10 @@ function FrameRow({ frame, onPreview }: { frame: FrameItem; onPreview: (id: stri
             <td className="px-3 py-2 text-sm text-gray-700">
                 {[meta.make, meta.model].filter(Boolean).join(' ') || '—'}
             </td>
-            <td className="px-3 py-2 text-sm text-gray-700 max-w-[140px] truncate" title={meta.lensModel ?? ''}>
+            <td
+                className="px-3 py-2 text-sm text-gray-700 max-w-[140px] truncate"
+                title={meta.lensModel ?? ''}
+            >
                 {meta.lensModel ?? '—'}
             </td>
             <td className="px-3 py-2 text-sm text-gray-600 text-center tabular-nums">
@@ -175,13 +240,16 @@ function FrameRow({ frame, onPreview }: { frame: FrameItem; onPreview: (id: stri
 }
 
 export function FrameTable() {
-    const { frames, selectedIds, selectAll, clearSelection } = useFrameStore();
+    const { frames, selectedIds, selectAll, clearSelection, reorderFrames } = useFrameStore();
     const [sortKey, setSortKey] = useState<SortKey | null>('frameNumber');
     const [sortDir, setSortDir] = useState<SortDir>('asc');
     const [previewFrameId, setPreviewFrameId] = useState<string | null>(null);
 
     const allSelected = frames.length > 0 && selectedIds.size === frames.length;
     const someSelected = selectedIds.size > 0 && !allSelected;
+
+    // 프레임번호 오름차순 정렬 상태일 때만 드래그 활성화
+    const isDragEnabled = sortKey === 'frameNumber' && sortDir === 'asc';
 
     const handleSort = (key: SortKey) => {
         if (sortKey === key) {
@@ -205,54 +273,106 @@ export function FrameTable() {
         });
     }, [frames, sortKey, sortDir]);
 
+    const sensors = useSensors(
+        useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    );
+
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
+        if (!over || active.id === over.id) return;
+        const oldIdx = sortedFrames.findIndex((f) => f.id === active.id);
+        const newIdx = sortedFrames.findIndex((f) => f.id === over.id);
+        if (oldIdx !== -1 && newIdx !== -1) {
+            reorderFrames(arrayMove(sortedFrames, oldIdx, newIdx));
+        }
+    };
+
     const thProps = { current: sortKey, dir: sortDir, onSort: handleSort };
 
     return (
-        <div className="overflow-x-auto">
-            <table className="min-w-full text-left">
-                <thead className="bg-gray-50 border-b border-gray-200 text-xs text-gray-500 uppercase tracking-wide">
-                    <tr>
-                        <th className="px-3 py-2">
-                            <input
-                                type="checkbox"
-                                checked={allSelected}
-                                ref={(el) => {
-                                    if (el) el.indeterminate = someSelected;
-                                }}
-                                onChange={() => (allSelected ? clearSelection() : selectAll())}
-                                className="cursor-pointer accent-blue-500"
+        <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+        >
+            <div className="overflow-x-auto">
+                <table className="min-w-full text-left">
+                    <thead className="bg-gray-50 border-b border-gray-200 text-xs text-gray-500 uppercase tracking-wide">
+                        <tr>
+                            {isDragEnabled && <th className="w-6" />}
+                            <th className="px-3 py-2">
+                                <input
+                                    type="checkbox"
+                                    checked={allSelected}
+                                    ref={(el) => {
+                                        if (el) el.indeterminate = someSelected;
+                                    }}
+                                    onChange={() => (allSelected ? clearSelection() : selectAll())}
+                                    className="cursor-pointer accent-blue-500"
+                                />
+                            </th>
+                            <th className="px-3 py-2">썸네일</th>
+                            <SortableTh
+                                label="프레임"
+                                sortKey="frameNumber"
+                                {...thProps}
+                                className="text-center"
                             />
-                        </th>
-                        <th className="px-3 py-2">썸네일</th>
-                        <SortableTh label="프레임" sortKey="frameNumber" {...thProps} className="text-center" />
-                        <SortableTh label="파일명" sortKey="fileName" {...thProps} />
-                        <SortableTh label="촬영시간" sortKey="dateTimeOriginal" {...thProps} />
-                        <SortableTh label="카메라" sortKey="camera" {...thProps} />
-                        <SortableTh label="렌즈" sortKey="lensModel" {...thProps} />
-                        <SortableTh label="f" sortKey="fNumber" {...thProps} className="text-center" />
-                        <SortableTh label="ss" sortKey="exposureTime" {...thProps} className="text-center" />
-                        <SortableTh label="ISO" sortKey="iso" {...thProps} className="text-center" />
-                        <th className="px-3 py-2">메모</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {sortedFrames.map((frame) => (
-                        <FrameRow key={frame.id} frame={frame} onPreview={setPreviewFrameId} />
-                    ))}
-                </tbody>
-            </table>
-            {previewFrameId !== null && (() => {
-                const idx = sortedFrames.findIndex((f) => f.id === previewFrameId);
-                if (idx === -1) return null;
-                return (
-                    <ImagePreviewModal
-                        frames={sortedFrames}
-                        currentIndex={idx}
-                        onNavigate={(i) => setPreviewFrameId(sortedFrames[i].id)}
-                        onClose={() => setPreviewFrameId(null)}
-                    />
-                );
-            })()}
-        </div>
+                            <SortableTh label="파일명" sortKey="fileName" {...thProps} />
+                            <SortableTh label="촬영시간" sortKey="dateTimeOriginal" {...thProps} />
+                            <SortableTh label="카메라" sortKey="camera" {...thProps} />
+                            <SortableTh label="렌즈" sortKey="lensModel" {...thProps} />
+                            <SortableTh
+                                label="f"
+                                sortKey="fNumber"
+                                {...thProps}
+                                className="text-center"
+                            />
+                            <SortableTh
+                                label="ss"
+                                sortKey="exposureTime"
+                                {...thProps}
+                                className="text-center"
+                            />
+                            <SortableTh
+                                label="ISO"
+                                sortKey="iso"
+                                {...thProps}
+                                className="text-center"
+                            />
+                            <th className="px-3 py-2">메모</th>
+                        </tr>
+                    </thead>
+                    <SortableContext
+                        items={sortedFrames.map((f) => f.id)}
+                        strategy={verticalListSortingStrategy}
+                    >
+                        <tbody>
+                            {sortedFrames.map((frame) => (
+                                <FrameRow
+                                    key={frame.id}
+                                    frame={frame}
+                                    onPreview={setPreviewFrameId}
+                                    dragEnabled={isDragEnabled}
+                                />
+                            ))}
+                        </tbody>
+                    </SortableContext>
+                </table>
+                {previewFrameId !== null &&
+                    (() => {
+                        const idx = sortedFrames.findIndex((f) => f.id === previewFrameId);
+                        if (idx === -1) return null;
+                        return (
+                            <ImagePreviewModal
+                                frames={sortedFrames}
+                                currentIndex={idx}
+                                onNavigate={(i) => setPreviewFrameId(sortedFrames[i].id)}
+                                onClose={() => setPreviewFrameId(null)}
+                            />
+                        );
+                    })()}
+            </div>
+        </DndContext>
     );
 }
