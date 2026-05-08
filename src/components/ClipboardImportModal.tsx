@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useFrameStore } from '../store/useFrameStore';
 import { useToastStore } from '../store/useToastStore';
 import { matchFrames, filoFrameToMetaPatch } from '../lib/matching';
@@ -26,10 +26,26 @@ export function ClipboardImportModal() {
     const applyImport = useFrameStore((s) => s.applyImport);
     const toast = useToastStore((s) => s.show);
 
+    const [frameOffset, setFrameOffset] = useState(0);
+
     const matches = useMemo(() => {
         if (!pendingImport) return [];
-        return matchFrames(pendingImport.roll.frames, frames);
-    }, [pendingImport, frames]);
+        if (frameOffset === 0) return matchFrames(pendingImport.roll.frames, frames);
+
+        const byNumber = new Map<number, (typeof frames)[number]>();
+        for (const item of frames) {
+            if (item.frameNumber !== null && !byNumber.has(item.frameNumber)) {
+                byNumber.set(item.frameNumber, item);
+            }
+        }
+        return pendingImport.roll.frames.map((ff) => {
+            const shifted = ff.n + frameOffset;
+            return {
+                filoFrame: ff,
+                frameItem: shifted >= 1 && shifted <= 99 ? (byNumber.get(shifted) ?? null) : null,
+            };
+        });
+    }, [pendingImport, frames, frameOffset]);
 
     useEffect(() => {
         if (!pendingImport) return;
@@ -202,6 +218,25 @@ export function ClipboardImportModal() {
 
                 {/* 경고 + 푸터 */}
                 <div className="px-5 py-3 border-t border-gray-100 shrink-0 space-y-2.5">
+                    {/* 프레임 오프셋 컨트롤 */}
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-400">프레임 오프셋</span>
+                        <button
+                            onClick={() => setFrameOffset((o) => o - 1)}
+                            className="px-2.5 py-1 text-xs font-medium text-gray-600 rounded border border-gray-200 hover:bg-gray-50 active:bg-gray-100 transition-colors"
+                        >
+                            ← 당기기
+                        </button>
+                        <span className="text-xs font-medium text-gray-700 w-8 text-center tabular-nums">
+                            {frameOffset > 0 ? `+${frameOffset}` : frameOffset}
+                        </span>
+                        <button
+                            onClick={() => setFrameOffset((o) => o + 1)}
+                            className="px-2.5 py-1 text-xs font-medium text-gray-600 rounded border border-gray-200 hover:bg-gray-50 active:bg-gray-100 transition-colors"
+                        >
+                            밀기 →
+                        </button>
+                    </div>
                     {unmatchedCount > 0 && (
                         <p className="text-xs text-amber-600 flex items-center gap-1.5">
                             <svg
