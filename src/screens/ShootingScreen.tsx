@@ -61,7 +61,10 @@ export function ShootingScreen() {
 
     function handleRecord() {
         const frameId = recordFrame(activeRoll!.id);
-        const newCount = frameCount + 1;
+        // 렌더 시점의 stale frameCount 대신 스토어의 최신 길이를 사용한다.
+        // (연속 탭 시 자동 마무리·초과 모달 분기가 잘못 판단되는 것을 방지)
+        const updatedRoll = useRollStore.getState().rolls.find((r) => r.id === activeRoll!.id);
+        const newCount = updatedRoll?.frames.length ?? frameCount + 1;
 
         if (recordLocation && frameId) {
             navigator.geolocation.getCurrentPosition(
