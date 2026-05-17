@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -16,6 +16,8 @@ import { PageLayout } from '@/components/ui/PageLayout';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { CopyToast } from '@/components/ui/CopyToast';
+import { useClipboardToast } from '@/hooks/useClipboardToast';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { FrameItem } from '@/components/roll/FrameItem';
@@ -91,9 +93,8 @@ export function RollDetailScreen() {
     const [memo, setMemo] = useState('');
     const [tsDate, setTsDate] = useState('');
     const [tsTime, setTsTime] = useState('');
-    const [copied, setCopied] = useState(false);
-    const [copyError, setCopyError] = useState(false);
-    const [toastFading, setToastFading] = useState(false);
+    const { copied, copyError, fading: toastFading, triggerCopied, triggerCopyError } =
+        useClipboardToast();
     const [showDeleteRoll, setShowDeleteRoll] = useState(false);
     const [showResumeConfirm, setShowResumeConfirm] = useState(false);
     const [showAddFrame, setShowAddFrame] = useState(false);
@@ -103,39 +104,6 @@ export function RollDetailScreen() {
     const [editCameraId, setEditCameraId] = useState('');
     const [editMaxFrames, setEditMaxFrames] = useState('');
     const [editRollMemo, setEditRollMemo] = useState('');
-
-    // 토스트 타이머: 재호출 시 기존 타이머를 정리하고, 언마운트 시 모두 해제한다.
-    const toastTimers = useRef<number[]>([]);
-    useEffect(
-        () => () => {
-            toastTimers.current.forEach((id) => clearTimeout(id));
-        },
-        [],
-    );
-
-    function scheduleToastDismiss() {
-        toastTimers.current.forEach((id) => clearTimeout(id));
-        setToastFading(false);
-        toastTimers.current = [
-            window.setTimeout(() => setToastFading(true), 1800),
-            window.setTimeout(() => {
-                setCopied(false);
-                setCopyError(false);
-            }, 2400),
-        ];
-    }
-
-    function triggerCopiedToast() {
-        setCopied(true);
-        setCopyError(false);
-        scheduleToastDismiss();
-    }
-
-    function triggerCopyErrorToast() {
-        setCopyError(true);
-        setCopied(false);
-        scheduleToastDismiss();
-    }
 
     if (!roll) {
         return (
@@ -247,9 +215,9 @@ export function RollDetailScreen() {
         try {
             const result = await buildExifPayload(roll, camera, film, lenses);
             await navigator.clipboard.writeText(result);
-            triggerCopiedToast();
+            triggerCopied();
         } catch {
-            triggerCopyErrorToast();
+            triggerCopyError();
         }
     }
 
@@ -478,7 +446,7 @@ export function RollDetailScreen() {
                                         .writeText(
                                             `${editingFrame!.latitude},${editingFrame!.longitude}`,
                                         )
-                                        .then(triggerCopiedToast, triggerCopyErrorToast);
+                                        .then(triggerCopied, triggerCopyError);
                                 }}
                                 className="flex items-center gap-2 bg-film-surface border border-film-border rounded-lg px-3 py-2 font-mono text-xs text-film-accent active:opacity-70 transition-opacity text-left"
                             >
@@ -606,32 +574,7 @@ export function RollDetailScreen() {
                 }}
             />
 
-            {/* Copy success toast */}
-            {copied && (
-                <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
-                    <div
-                        className={`animate-slide-up flex items-center gap-2 bg-film-surface border border-film-border rounded-full px-4 py-2 shadow-lg transition-opacity duration-500 ${toastFading ? 'opacity-0' : 'opacity-100'}`}
-                    >
-                        <Check size={13} className="text-film-accent shrink-0" />
-                        <span className="font-mono text-xs text-film-text whitespace-nowrap">
-                            데이터가 클립보드에 복사되었습니다.
-                        </span>
-                    </div>
-                </div>
-            )}
-
-            {/* Copy error toast */}
-            {copyError && (
-                <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
-                    <div
-                        className={`animate-slide-up flex items-center gap-2 bg-film-surface border border-film-danger rounded-full px-4 py-2 shadow-lg transition-opacity duration-500 ${toastFading ? 'opacity-0' : 'opacity-100'}`}
-                    >
-                        <span className="font-mono text-xs text-film-danger whitespace-nowrap">
-                            복사에 실패했습니다. 브라우저가 지원하지 않을 수 있습니다.
-                        </span>
-                    </div>
-                </div>
-            )}
+            <CopyToast copied={copied} copyError={copyError} fading={toastFading} />
 
             {/* Delete roll confirmation */}
             <ConfirmModal
