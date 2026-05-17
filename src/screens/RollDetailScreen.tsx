@@ -15,6 +15,7 @@ import {
 import { PageLayout } from '@/components/ui/PageLayout';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { FrameItem } from '@/components/roll/FrameItem';
@@ -638,37 +639,19 @@ export function RollDetailScreen() {
             </Modal>
 
             {/* Resume roll confirmation */}
-            <Modal
+            <ConfirmModal
                 isOpen={showResumeConfirm}
                 onClose={() => setShowResumeConfirm(false)}
                 title="촬영을 재개할까요?"
-            >
-                <div className="flex flex-col gap-4">
-                    <p className="text-film-muted font-mono text-sm">
-                        촬영이 마무리된 롤입니다. 촬영을 재개하시겠습니까?
-                    </p>
-                    <div className="flex gap-3">
-                        <Button
-                            variant="secondary"
-                            fullWidth
-                            onClick={() => setShowResumeConfirm(false)}
-                        >
-                            취소
-                        </Button>
-                        <Button
-                            variant="primary"
-                            fullWidth
-                            onClick={() => {
-                                resumeRoll(roll!.id);
-                                setShowResumeConfirm(false);
-                                navigate('/shoot');
-                            }}
-                        >
-                            재개
-                        </Button>
-                    </div>
-                </div>
-            </Modal>
+                message="촬영이 마무리된 롤입니다. 촬영을 재개하시겠습니까?"
+                cancelLabel="취소"
+                confirmLabel="재개"
+                onConfirm={() => {
+                    resumeRoll(roll!.id);
+                    setShowResumeConfirm(false);
+                    navigate('/shoot');
+                }}
+            />
 
             {/* Copy success toast */}
             {copied && (
@@ -698,30 +681,16 @@ export function RollDetailScreen() {
             )}
 
             {/* Delete roll confirmation */}
-            <Modal
+            <ConfirmModal
                 isOpen={showDeleteRoll}
                 onClose={() => setShowDeleteRoll(false)}
                 title="롤을 삭제할까요?"
-            >
-                <div className="flex flex-col gap-4">
-                    <p className="text-film-muted font-mono text-sm">
-                        이 롤과 기록된 {roll.frames.length}컷을 영구적으로 삭제합니다. 이 작업은
-                        되돌릴 수 없습니다.
-                    </p>
-                    <div className="flex gap-3">
-                        <Button
-                            variant="secondary"
-                            fullWidth
-                            onClick={() => setShowDeleteRoll(false)}
-                        >
-                            취소
-                        </Button>
-                        <Button variant="danger" fullWidth onClick={handleDeleteRoll}>
-                            삭제
-                        </Button>
-                    </div>
-                </div>
-            </Modal>
+                message={`이 롤과 기록된 ${roll.frames.length}컷을 영구적으로 삭제합니다. 이 작업은 되돌릴 수 없습니다.`}
+                cancelLabel="취소"
+                confirmLabel="삭제"
+                variant="danger"
+                onConfirm={handleDeleteRoll}
+            />
         </PageLayout>
     );
 }

@@ -5,6 +5,7 @@ import { Upload, Download, Film, Trash2, AlertTriangle, Settings, Database } fro
 import { PageLayout } from '@/components/ui/PageLayout';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { Select } from '@/components/ui/Select';
 import { RollCard } from '@/components/roll/RollCard';
 import { useRollStore } from '@/store/rollStore';
@@ -327,41 +328,33 @@ export function FilmListScreen() {
             </Modal>
 
             {/* 가져오기 성공 모달 */}
-            <Modal
+            <ConfirmModal
                 isOpen={showImportSuccess}
                 onClose={() => setShowImportSuccess(false)}
                 title="가져오기 완료"
-            >
-                <div className="flex flex-col gap-4">
-                    <p className="text-film-muted font-mono text-sm">
-                        데이터를 성공적으로 가져왔습니다.
-                    </p>
-                    <Button variant="primary" fullWidth onClick={() => setShowImportSuccess(false)}>
-                        확인
-                    </Button>
-                </div>
-            </Modal>
+                message="데이터를 성공적으로 가져왔습니다."
+                onConfirm={() => setShowImportSuccess(false)}
+            />
 
             {/* 가져오기 실패 모달 */}
-            <Modal
+            <ConfirmModal
                 isOpen={importError !== null}
                 onClose={() => setImportError(null)}
                 title="가져오기 실패"
-            >
-                <div className="flex flex-col gap-4">
-                    <p className="text-film-muted font-mono text-sm">
+                message={
+                    <>
                         파일 형식이 올바르지 않아 가져올 수 없습니다.
-                    </p>
-                    {importError && (
-                        <p className="text-film-danger font-mono text-xs bg-film-surface rounded-lg px-3 py-2">
-                            {importError}
-                        </p>
-                    )}
-                    <Button variant="secondary" fullWidth onClick={() => setImportError(null)}>
-                        닫기
-                    </Button>
-                </div>
-            </Modal>
+                        {importError && (
+                            <span className="block mt-2 text-film-danger font-mono text-xs bg-film-surface rounded-lg px-3 py-2">
+                                {importError}
+                            </span>
+                        )}
+                    </>
+                }
+                confirmLabel="닫기"
+                variant="secondary"
+                onConfirm={() => setImportError(null)}
+            />
 
         </PageLayout>
     );
