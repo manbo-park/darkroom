@@ -263,10 +263,10 @@ export function ShootingScreen() {
                 <div className="flex flex-col gap-3 pb-safe-bottom">
                     <div className="relative">
                         <span
-                            className="absolute inset-x-0 -top-10 flex items-center justify-center font-mono text-xs text-film-accent tracking-widest transition-opacity duration-100"
-                            style={{ opacity: dragDeltaY >= 60 ? 0 : Math.min(dragDeltaY / 30, 1) }}
+                            className="absolute inset-x-0 -top-10 flex items-center justify-center font-mono text-xs text-film-muted tracking-widest transition-opacity duration-100"
+                            style={{ opacity: dragDeltaY >= 60 ? 0 : 1 }}
                         >
-                            ↑ 상세 기록
+                            ↑ 위로 드래그해서 빠른 상세 기록
                         </span>
                         <button
                             onPointerDown={handlePointerDown}
@@ -289,7 +289,7 @@ export function ShootingScreen() {
                                 .filter(Boolean)
                                 .join(' ')}
                         >
-                            {justRecorded ? '✓ 기록됨' : dragDeltaY >= 60 ? '↑ 상세 기록' : '⬤  기록'}
+                            {justRecorded ? '✓ 기록됨' : dragDeltaY >= 60 ? '빠른 상세 기록' : '기록'}
                         </button>
                     </div>
 

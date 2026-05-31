@@ -40,7 +40,7 @@ export function QuickRecordModal({ rollId, isOpen, onClose, onSave }: QuickRecor
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title="빠른 기록">
+        <Modal isOpen={isOpen} onClose={onClose} title="빠른 상세 기록">
             <div className="flex flex-col gap-4">
                 <Select
                     label="조리개"
