@@ -181,7 +181,7 @@ export function ShootingScreen() {
                 </button>
             }
         >
-            <div className="flex flex-col h-content px-4 pt-4">
+            <div className="flex flex-col h-full px-4 pt-4">
                 {/* Roll info card */}
                 <div className="bg-film-surface border border-film-border rounded-xl p-4 mb-6">
                     <div className="flex items-center gap-2 mb-3">

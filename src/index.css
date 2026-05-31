@@ -59,10 +59,6 @@
     .pt-header {
         padding-top: calc(env(safe-area-inset-top) + 3.5rem);
     }
-    /* 헤더를 제외한 나머지 뷰포트 높이 */
-    .h-content {
-        height: calc(100dvh - env(safe-area-inset-top) - 3.5rem);
-    }
     /* 액센트 그라데이션 배경 */
     .accent-gradient-bg {
         background: linear-gradient(135deg, #407c01, #d4a853);
