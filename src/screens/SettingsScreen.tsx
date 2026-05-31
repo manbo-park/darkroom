@@ -3,7 +3,11 @@ import { Switch } from '@/components/ui/Switch';
 import { useSettingsStore } from '@/store/settingsStore';
 
 export function SettingsScreen() {
-    const { autoFinishRoll, setAutoFinishRoll, recordLocation, setRecordLocation } = useSettingsStore();
+    const {
+        autoFinishRoll, setAutoFinishRoll,
+        recordLocation, setRecordLocation,
+        carryOverExposure, setCarryOverExposure,
+    } = useSettingsStore();
 
     function handleRecordLocationChange(value: boolean) {
         if (!value) {
@@ -36,12 +40,21 @@ export function SettingsScreen() {
                     <p className="font-mono text-xs text-film-muted uppercase tracking-widest px-1">
                         촬영
                     </p>
-                    <div className="bg-film-surface border border-film-border rounded-xl px-4 py-3">
-                        <Switch
-                            checked={recordLocation}
-                            onChange={handleRecordLocationChange}
-                            label="위치 정보 기록"
-                        />
+                    <div className="bg-film-surface border border-film-border rounded-xl px-4 divide-y divide-film-border">
+                        <div className="py-3">
+                            <Switch
+                                checked={recordLocation}
+                                onChange={handleRecordLocationChange}
+                                label="위치 정보 기록"
+                            />
+                        </div>
+                        <div className="py-3">
+                            <Switch
+                                checked={carryOverExposure}
+                                onChange={setCarryOverExposure}
+                                label="빠른 기록 시 이전 컷 조리개·셔터값 불러오기"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

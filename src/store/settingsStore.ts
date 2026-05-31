@@ -6,6 +6,8 @@ interface SettingsState {
     setAutoFinishRoll: (value: boolean) => void;
     recordLocation: boolean;
     setRecordLocation: (value: boolean) => void;
+    carryOverExposure: boolean;
+    setCarryOverExposure: (value: boolean) => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -15,6 +17,8 @@ export const useSettingsStore = create<SettingsState>()(
             setAutoFinishRoll: (value) => set({ autoFinishRoll: value }),
             recordLocation: false,
             setRecordLocation: (value) => set({ recordLocation: value }),
+            carryOverExposure: true,
+            setCarryOverExposure: (value) => set({ carryOverExposure: value }),
         }),
         {
             name: 'filo-settings',
