@@ -2,6 +2,7 @@ import { type ReactNode, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { lockBodyScroll, unlockBodyScroll } from '@/lib/scrollLock';
+import { DebugViewport } from '@/components/ui/DebugViewport';
 
 interface PageLayoutProps {
     title: ReactNode;
@@ -59,6 +60,7 @@ export function PageLayout({
     if (noScroll) {
         return (
             <div className="fixed inset-0 flex flex-col overflow-hidden bg-film-bg">
+                <DebugViewport />
                 <header className="shrink-0 bg-film-bg border-b border-film-border px-4 pt-safe-top">
                     {header}
                 </header>
