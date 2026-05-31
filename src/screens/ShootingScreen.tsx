@@ -48,7 +48,9 @@ export function ShootingScreen() {
     useEffect(() => {
         if (!recordLocation) return;
         const watchId = navigator.geolocation.watchPosition(
-            (pos) => { cachedPositionRef.current = pos; },
+            (pos) => {
+                cachedPositionRef.current = pos;
+            },
             () => {},
             { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 },
         );
@@ -279,7 +281,7 @@ export function ShootingScreen() {
                                 transform: `translateY(-${Math.min(dragDeltaY * 0.2, 12)}px)`,
                             }}
                             className={[
-                                'w-full py-6 rounded-2xl font-mono font-bold text-xl tracking-widest uppercase transition-transform duration-75',
+                                'w-full py-6 rounded-2xl font-mono font-bold text-xl tracking-widest uppercase transition-transform duration-75 border-2 border-transparent',
                                 justRecorded
                                     ? 'accent-gradient-bg text-film-bg'
                                     : dragDeltaY >= 60
@@ -289,7 +291,11 @@ export function ShootingScreen() {
                                 .filter(Boolean)
                                 .join(' ')}
                         >
-                            {justRecorded ? '✓ 기록됨' : dragDeltaY >= 60 ? '빠른 상세 기록' : '기록'}
+                            {justRecorded
+                                ? '✓ 기록됨'
+                                : dragDeltaY >= 60
+                                  ? '빠른 상세 기록'
+                                  : '기록'}
                         </button>
                     </div>
 
