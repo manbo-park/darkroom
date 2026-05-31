@@ -2,7 +2,6 @@ import { type ReactNode, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { lockBodyScroll, unlockBodyScroll } from '@/lib/scrollLock';
-import { DebugViewport } from '@/components/ui/DebugViewport';
 
 interface PageLayoutProps {
     title: ReactNode;
@@ -56,9 +55,6 @@ export function PageLayout({
     if (noScroll) {
         return (
             <div className="fixed inset-x-0 top-0 h-svh flex flex-col overflow-hidden bg-film-bg">
-                <DebugViewport />
-                {/* [임시] 컨테이너 바닥 위치 확인용 마커 */}
-                <div className="absolute bottom-0 inset-x-0 h-1 bg-red-500 z-[101]" />
                 <header className="shrink-0 bg-film-bg border-b border-film-border px-4 pt-safe-top">
                     {header}
                 </header>
