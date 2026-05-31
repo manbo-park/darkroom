@@ -52,14 +52,14 @@ export function PageLayout({
         </div>
     );
 
-    // 촬영 화면처럼 스크롤이 없는 페이지는 fixed inset-0 루트로 구성한다.
-    // 100dvh/innerHeight 같은 뷰포트 단위·메트릭은 콜드 스타트(스플래시 직후
-    // 직행) 첫 페인트 시점에 상단 인셋만큼 짧은 값으로 잡히고 이후 보정되지
-    // 않아 하단 공백이 생긴다. fixed inset-0는 브라우저가 뷰포트 박스에 직접
-    // 맞춰 주므로(SplashScreen과 동일 패턴) 이 타이밍 문제의 영향을 받지 않는다.
+    // 촬영 화면처럼 스크롤이 없는 페이지는 상단 고정 + 100svh 루트로 구성한다.
+    // dvh/innerHeight는 다른 화면에서 재진입할 때 마운트 순간 상단 인셋을 포함한
+    // 큰 값(전체 화면 높이)으로 잡혔다가 곧 수축해 콘텐츠가 위로 튄다. svh(작은
+    // 뷰포트)는 콜드 스타트·재진입 모두에서 항상 동일한 값으로 안정적이므로,
+    // 높이를 추적하지 않고 svh로 고정해 두 경우 모두 즉시 정확한 높이를 잡는다.
     if (noScroll) {
         return (
-            <div className="fixed inset-0 flex flex-col overflow-hidden bg-film-bg">
+            <div className="fixed inset-x-0 top-0 h-svh flex flex-col overflow-hidden bg-film-bg">
                 <DebugViewport />
                 <header className="shrink-0 bg-film-bg border-b border-film-border px-4 pt-safe-top">
                     {header}
