@@ -19,7 +19,8 @@ export function QuickRecordModal({ rollId, isOpen, onClose, onSave }: QuickRecor
     const carryOverExposure = useSettingsStore((s) => s.carryOverExposure);
     const lastFrame = useRollStore((s) => {
         const roll = s.rolls.find((r) => r.id === rollId);
-        return roll?.frames.at(-1) ?? null;
+        const frames = roll?.frames;
+        return frames ? (frames[frames.length - 1] ?? null) : null;
     });
 
     const [aperture, setAperture] = useState(() =>
