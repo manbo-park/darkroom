@@ -239,14 +239,14 @@ export function RollDetailScreen() {
             />
 
             <EditRollModal
-                key={showEditRoll ? roll.id : 'closed'}
+                key={showEditRoll ? roll.id : 'edit-roll-closed'}
                 rollId={roll.id}
                 isOpen={showEditRoll}
                 onClose={() => setShowEditRoll(false)}
             />
 
             <AddFrameModal
-                key={showAddFrame ? 'open' : 'closed'}
+                key={showAddFrame ? 'add-frame-open' : 'add-frame-closed'}
                 rollId={roll.id}
                 totalFrames={roll.frames.length}
                 defaultAt={roll.frames.length + 1}
