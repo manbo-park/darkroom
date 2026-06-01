@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, List, Film, Camera, RefreshCw } from 'lucide-react';
+import { CheckCircle, List, Film, Camera, RefreshCw, Clock, Search, FileText } from 'lucide-react';
 import { PageLayout } from '@/components/ui/PageLayout';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
@@ -73,6 +73,28 @@ export function ShootingScreen() {
     const film = films.find((f) => f.id === activeRoll.filmId);
     const camera = cameras.find((c) => c.id === activeRoll.cameraId);
     const currentLens = lenses.find((l) => l.id === activeRoll.currentLensId);
+
+    const lastFrame =
+        activeRoll.frames.length > 0
+            ? activeRoll.frames[activeRoll.frames.length - 1]
+            : undefined;
+    const lastFrameLens = lenses.find((l) => l.id === lastFrame?.lensId);
+    const lastFrameTimeStr = lastFrame?.timestamp
+        ? (() => {
+              const time = new Date(lastFrame.timestamp);
+              const timeStr = time.toLocaleTimeString('ko-KR', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: false,
+              });
+              const dateStr = time.toLocaleDateString('ko-KR', {
+                  month: 'short',
+                  day: 'numeric',
+              });
+              return `${dateStr} ${timeStr}`;
+          })()
+        : null;
 
     const frameCount = activeRoll.frames.length;
     const maxFrames = activeRoll.maxFrames;
@@ -369,10 +391,42 @@ export function ShootingScreen() {
                 onClose={() => setShowUndoConfirm(false)}
                 title="마지막 컷을 되돌릴까요?"
                 message={
-                    <>
-                        <span className="text-film-text font-bold">{frameCount}</span>번째 컷 기록이
-                        삭제됩니다.
-                    </>
+                    <div className="flex flex-col gap-3">
+                        <span>
+                            <span className="text-film-text font-bold">{frameCount}</span>번째 컷
+                            기록이 삭제됩니다.
+                        </span>
+                        {lastFrame && (
+                            <div className="flex flex-col gap-1.5 bg-film-surface border border-film-border rounded-lg p-3">
+                                <div className="flex items-center gap-2 text-xs">
+                                    <Clock size={11} className="shrink-0" />
+                                    <span>{lastFrameTimeStr ?? '촬영 시간 없음'}</span>
+                                </div>
+                                {lastFrameLens && (
+                                    <div className="flex items-center gap-2 text-xs">
+                                        <Search size={11} className="shrink-0" />
+                                        <span>{lastFrameLens.name}</span>
+                                    </div>
+                                )}
+                                {(lastFrame.aperture || lastFrame.shutterSpeed) && (
+                                    <div className="flex items-center gap-3 text-xs">
+                                        {lastFrame.aperture && (
+                                            <span>f {lastFrame.aperture.replace(/^f\//i, '')}</span>
+                                        )}
+                                        {lastFrame.shutterSpeed && (
+                                            <span>ss {lastFrame.shutterSpeed}</span>
+                                        )}
+                                    </div>
+                                )}
+                                {lastFrame.memo && (
+                                    <div className="flex items-center gap-2 text-xs">
+                                        <FileText size={11} className="shrink-0" />
+                                        <span>{lastFrame.memo}</span>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 }
                 cancelLabel="취소"
                 confirmLabel="되돌리기"
