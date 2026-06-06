@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface SettingsState {
+    autoNavigateToShooting: boolean;
+    setAutoNavigateToShooting: (value: boolean) => void;
     autoFinishRoll: boolean;
     setAutoFinishRoll: (value: boolean) => void;
     recordLocation: boolean;
@@ -17,6 +19,8 @@ interface SettingsState {
 export const useSettingsStore = create<SettingsState>()(
     persist(
         (set) => ({
+            autoNavigateToShooting: true,
+            setAutoNavigateToShooting: (value) => set({ autoNavigateToShooting: value }),
             autoFinishRoll: false,
             setAutoFinishRoll: (value) => set({ autoFinishRoll: value }),
             recordLocation: false,

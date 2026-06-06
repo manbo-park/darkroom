@@ -2,6 +2,7 @@ import { useEffect, useSyncExternalStore } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRollStore } from '@/store/rollStore';
 import { useMasterDataStore } from '@/store/masterDataStore';
+import { useSettingsStore } from '@/store/settingsStore';
 
 interface PersistApi {
     hasHydrated: () => boolean;
@@ -23,21 +24,23 @@ export function SplashScreen() {
 
     const rollsHydrated = useHydrated(useRollStore.persist);
     const masterHydrated = useHydrated(useMasterDataStore.persist);
+    const settingsHydrated = useHydrated(useSettingsStore.persist);
 
     const activeRollId = useRollStore((s) => s.activeRollId);
     const rolls = useRollStore((s) => s.rolls);
+    const autoNavigateToShooting = useSettingsStore((s) => s.autoNavigateToShooting);
 
     useEffect(() => {
-        if (!rollsHydrated || !masterHydrated) return;
+        if (!rollsHydrated || !masterHydrated || !settingsHydrated) return;
 
         const activeRoll = rolls.find((r) => r.id === activeRollId && r.status === 'active');
 
         const timer = setTimeout(() => {
-            navigate(activeRoll ? '/shoot' : '/rolls', { replace: true });
+            navigate(activeRoll && autoNavigateToShooting ? '/shoot' : '/rolls', { replace: true });
         }, 1200);
 
         return () => clearTimeout(timer);
-    }, [rollsHydrated, masterHydrated, activeRollId, rolls, navigate]);
+    }, [rollsHydrated, masterHydrated, settingsHydrated, activeRollId, rolls, autoNavigateToShooting, navigate]);
 
     // black 상태바에서 웹 뷰포트는 상단 상태바(시스템 영역) 아래에서 시작하므로,
     // 그냥 중앙 정렬하면 로고가 물리 화면 중심보다 상태바 높이의 절반만큼 아래로
@@ -55,7 +58,7 @@ export function SplashScreen() {
             <img src="/filo-logo-white-with-shadow.png" alt="filo" className="h-40" />
 
             {/* Loading indicator */}
-            {!rollsHydrated || !masterHydrated ? (
+            {!rollsHydrated || !masterHydrated || !settingsHydrated ? (
                 <div className="flex gap-1.5 mt-4">
                     {[0, 1, 2].map((i) => (
                         <div

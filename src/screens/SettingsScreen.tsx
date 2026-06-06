@@ -4,6 +4,8 @@ import { useSettingsStore } from '@/store/settingsStore';
 
 export function SettingsScreen() {
     const {
+        autoNavigateToShooting,
+        setAutoNavigateToShooting,
         autoFinishRoll,
         setAutoFinishRoll,
         recordLocation,
@@ -31,6 +33,18 @@ export function SettingsScreen() {
     return (
         <PageLayout title="설정" showBack>
             <div className="px-4 py-4 flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                    <p className="font-mono text-xs text-film-muted uppercase tracking-widest px-1">
+                        시작
+                    </p>
+                    <div className="bg-film-surface border border-film-border rounded-xl px-4 py-3">
+                        <Switch
+                            checked={autoNavigateToShooting}
+                            onChange={setAutoNavigateToShooting}
+                            label="촬영 중인 롤이 있으면 촬영 화면으로 시작"
+                        />
+                    </div>
+                </div>
                 <div className="flex flex-col gap-2">
                     <p className="font-mono text-xs text-film-muted uppercase tracking-widest px-1">
                         롤
