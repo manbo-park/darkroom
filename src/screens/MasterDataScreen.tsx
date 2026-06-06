@@ -17,6 +17,7 @@ export function MasterDataScreen() {
     const [tab, setTab] = useState<Tab>('films');
     const [confirmClear, setConfirmClear] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
+    const [editTarget, setEditTarget] = useState<Film | Camera | Lens | null>(null);
     const {
         films,
         cameras,
@@ -40,6 +41,17 @@ export function MasterDataScreen() {
             addCamera(data as Omit<Camera, 'id'>);
         } else {
             addLens(data as Omit<Lens, 'id'>);
+        }
+    }
+
+    function handleEdit(data: MasterFormData) {
+        if (!editTarget) return;
+        if (tab === 'films') {
+            updateFilm(editTarget.id, data as Partial<Omit<Film, 'id'>>);
+        } else if (tab === 'cameras') {
+            updateCamera(editTarget.id, data as Partial<Omit<Camera, 'id'>>);
+        } else {
+            updateLens(editTarget.id, data as Partial<Omit<Lens, 'id'>>);
         }
     }
 
@@ -134,7 +146,7 @@ export function MasterDataScreen() {
                                     <FilmRow
                                         key={film.id}
                                         film={film}
-                                        onUpdate={(p) => updateFilm(film.id, p)}
+                                        onEdit={() => setEditTarget(film)}
                                         onDelete={() => deleteFilm(film.id)}
                                     />
                                 ))
@@ -149,7 +161,7 @@ export function MasterDataScreen() {
                                     <CameraRow
                                         key={cam.id}
                                         camera={cam}
-                                        onUpdate={(p) => updateCamera(cam.id, p)}
+                                        onEdit={() => setEditTarget(cam)}
                                         onDelete={() => deleteCamera(cam.id)}
                                     />
                                 ))
@@ -164,7 +176,7 @@ export function MasterDataScreen() {
                                     <LensRow
                                         key={lens.id}
                                         lens={lens}
-                                        onUpdate={(p) => updateLens(lens.id, p)}
+                                        onEdit={() => setEditTarget(lens)}
                                         onDelete={() => deleteLens(lens.id)}
                                     />
                                 ))
@@ -177,6 +189,14 @@ export function MasterDataScreen() {
                     type={tab}
                     onClose={() => setAddOpen(false)}
                     onSubmit={handleAdd}
+                />
+            )}
+            {editTarget && (
+                <MasterDataFormModal
+                    type={tab}
+                    initial={editTarget}
+                    onClose={() => setEditTarget(null)}
+                    onSubmit={handleEdit}
                 />
             )}
         </PageLayout>

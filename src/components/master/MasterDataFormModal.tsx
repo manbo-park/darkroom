@@ -42,13 +42,14 @@ export function MasterDataFormModal({ type, initial, onClose, onSubmit }: Master
         if (type === 'films') {
             onSubmit({ name: name.trim(), iso: parseInt(iso) || 400 });
         } else if (type === 'cameras') {
-            onSubmit({ name: name.trim(), ...(brand.trim() && { brand: brand.trim() }) });
+            // 편집 시 빈 값으로 지우면 제거되도록 undefined를 명시한다.
+            onSubmit({ name: name.trim(), brand: brand.trim() || undefined });
         } else {
             const parsedMax = parseFloat(maxAperture);
             onSubmit({
                 name: name.trim(),
                 apertureStop,
-                ...(Number.isFinite(parsedMax) && { maxAperture: parsedMax }),
+                maxAperture: Number.isFinite(parsedMax) ? parsedMax : undefined,
             });
         }
         onClose();
