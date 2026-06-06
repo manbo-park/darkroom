@@ -178,16 +178,16 @@ export function MasterDataScreen() {
                     </div>
                     {tab === 'lenses' && (
                         <div className="flex gap-2">
-                            <div className="flex border border-film-border rounded-lg overflow-hidden shrink-0">
+                            <div className="grid grid-cols-3 border border-film-border rounded-lg overflow-hidden shrink-0">
                                 {APERTURE_STOPS.map((stop) => (
                                     <button
                                         key={stop}
                                         type="button"
                                         onClick={() => setNewApertureStop(stop)}
                                         className={[
-                                            'px-3 py-2.5 font-mono text-sm transition-colors',
+                                            'px-3 py-2.5 font-mono text-sm text-center transition-colors',
                                             newApertureStop === stop
-                                                ? 'bg-film-accent text-film-bg'
+                                                ? 'accent-gradient-bg text-film-bg'
                                                 : 'text-film-muted hover:text-film-text',
                                         ].join(' ')}
                                     >

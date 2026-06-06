@@ -56,16 +56,16 @@ export function LensRow({ lens, onUpdate, onDelete }: LensRowProps) {
                         placeholder="렌즈 이름"
                     />
                     <div className="flex gap-1">
-                        <div className="flex border border-film-border rounded overflow-hidden shrink-0">
+                        <div className="grid grid-cols-3 border border-film-border rounded overflow-hidden shrink-0">
                             {APERTURE_STOPS.map((stop) => (
                                 <button
                                     key={stop}
                                     type="button"
                                     onClick={() => setApertureStop(stop)}
                                     className={[
-                                        'px-2 py-1 font-mono text-xs transition-colors',
+                                        'px-2 py-1 font-mono text-xs text-center transition-colors',
                                         apertureStop === stop
-                                            ? 'bg-film-accent text-film-bg'
+                                            ? 'accent-gradient-bg text-film-bg'
                                             : 'text-film-muted hover:text-film-text',
                                     ].join(' ')}
                                 >

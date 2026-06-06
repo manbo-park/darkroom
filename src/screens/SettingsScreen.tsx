@@ -91,15 +91,15 @@ export function SettingsScreen() {
                                 <span className="text-sm text-film-text">
                                     조리개 기본 스탑 단위
                                 </span>
-                                <div className="flex border border-film-border rounded-lg overflow-hidden shrink-0">
+                                <div className="grid grid-cols-3 border border-film-border rounded-lg overflow-hidden shrink-0">
                                     {apertureStops.map((stop) => (
                                         <button
                                             key={stop}
                                             onClick={() => setApertureStop(stop)}
                                             className={[
-                                                'px-3 py-1.5 font-mono text-xs transition-colors',
+                                                'px-3 py-1.5 font-mono text-xs text-center transition-colors',
                                                 apertureStop === stop
-                                                    ? 'bg-film-accent text-film-bg'
+                                                    ? 'accent-gradient-bg text-film-bg'
                                                     : 'text-film-muted hover:text-film-text',
                                             ].join(' ')}
                                         >
