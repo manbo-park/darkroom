@@ -43,7 +43,7 @@ export function Select({
                     .join(' ')}
             >
                 {placeholder && (
-                    <option value="" disabled>
+                    <option value="">
                         {placeholder}
                     </option>
                 )}
