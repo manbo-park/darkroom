@@ -12,6 +12,8 @@ interface SettingsState {
     setCarryOverExposure: (value: boolean) => void;
     sortFramesNewestFirst: boolean;
     setSortFramesNewestFirst: (value: boolean) => void;
+    hasSeenTutorial: boolean;
+    setHasSeenTutorial: (value: boolean) => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -27,6 +29,8 @@ export const useSettingsStore = create<SettingsState>()(
             setCarryOverExposure: (value) => set({ carryOverExposure: value }),
             sortFramesNewestFirst: false,
             setSortFramesNewestFirst: (value) => set({ sortFramesNewestFirst: value }),
+            hasSeenTutorial: false,
+            setHasSeenTutorial: (value) => set({ hasSeenTutorial: value }),
         }),
         {
             name: 'filo-settings',

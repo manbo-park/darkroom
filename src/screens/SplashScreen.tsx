@@ -29,6 +29,7 @@ export function SplashScreen() {
     const activeRollId = useRollStore((s) => s.activeRollId);
     const rolls = useRollStore((s) => s.rolls);
     const autoNavigateToShooting = useSettingsStore((s) => s.autoNavigateToShooting);
+    const hasSeenTutorial = useSettingsStore((s) => s.hasSeenTutorial);
 
     useEffect(() => {
         if (!rollsHydrated || !masterHydrated || !settingsHydrated) return;
@@ -36,11 +37,26 @@ export function SplashScreen() {
         const activeRoll = rolls.find((r) => r.id === activeRollId && r.status === 'active');
 
         const timer = setTimeout(() => {
-            navigate(activeRoll && autoNavigateToShooting ? '/shoot' : '/rolls', { replace: true });
+            // 최초 기동 시에는 튜토리얼을 먼저 보여준다.
+            const to = !hasSeenTutorial
+                ? '/tutorial'
+                : activeRoll && autoNavigateToShooting
+                  ? '/shoot'
+                  : '/rolls';
+            navigate(to, { replace: true });
         }, 1200);
 
         return () => clearTimeout(timer);
-    }, [rollsHydrated, masterHydrated, settingsHydrated, activeRollId, rolls, autoNavigateToShooting, navigate]);
+    }, [
+        rollsHydrated,
+        masterHydrated,
+        settingsHydrated,
+        activeRollId,
+        rolls,
+        autoNavigateToShooting,
+        hasSeenTutorial,
+        navigate,
+    ]);
 
     // black 상태바에서 웹 뷰포트는 상단 상태바(시스템 영역) 아래에서 시작하므로,
     // 그냥 중앙 정렬하면 로고가 물리 화면 중심보다 상태바 높이의 절반만큼 아래로
