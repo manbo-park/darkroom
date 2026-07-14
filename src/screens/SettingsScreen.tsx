@@ -1,8 +1,11 @@
+import { useNavigate } from 'react-router-dom';
+import { ChevronRight } from 'lucide-react';
 import { PageLayout } from '@/components/ui/PageLayout';
 import { Switch } from '@/components/ui/Switch';
 import { useSettingsStore } from '@/store/settingsStore';
 
 export function SettingsScreen() {
+    const navigate = useNavigate();
     const {
         autoNavigateToShooting,
         setAutoNavigateToShooting,
@@ -81,6 +84,20 @@ export function SettingsScreen() {
                                 label="빠른 상세 기록 시 이전 프레임 f·SS값 불러오기"
                             />
                         </div>
+                    </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                    <p className="font-mono text-xs text-film-muted uppercase tracking-widest px-1">
+                        튜토리얼
+                    </p>
+                    <div className="bg-film-surface border border-film-border rounded-xl px-4 py-3">
+                        <button
+                            onClick={() => navigate('/tutorial')}
+                            className="w-full flex items-center justify-between text-film-text hover:text-film-accent transition-colors"
+                        >
+                            <span className="font-mono text-sm">튜토리얼 보기</span>
+                            <ChevronRight size={16} className="text-film-muted" />
+                        </button>
                     </div>
                 </div>
             </div>
