@@ -25,6 +25,7 @@
         "serialize-javascript": "^7.0.5"
     },
     "devDependencies": {
+        "@darkroom/tsconfig": "workspace:*",
         "@eslint/js": "^9.39.4",
         "@types/node": "^25.6.0",
         "@types/react": "^19.1.2",

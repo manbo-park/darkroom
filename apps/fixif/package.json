@@ -23,6 +23,7 @@
         "zustand": "^5.0.12"
     },
     "devDependencies": {
+        "@darkroom/tsconfig": "workspace:*",
         "@eslint/js": "^9.21.0",
         "@types/jszip": "^3.4.0",
         "@types/piexifjs": "^1.0.0",
