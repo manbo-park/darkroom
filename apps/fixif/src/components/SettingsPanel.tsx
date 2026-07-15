@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSettingsStore } from '../store/useSettingsStore';
 
 function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
@@ -31,18 +31,15 @@ export function SettingsPanel() {
     const [suffixInput, setSuffixInput] = useState(exportSuffix);
     const [suffixError, setSuffixError] = useState('');
 
-    // settingsOpen이 바뀌는 렌더 중 즉시 closing 상태 동기화 (effect 지연 없이)
+    // settingsOpen이 바뀌는 렌더 중 즉시 closing 상태와 입력값을 동기화한다 (effect 지연 없이).
     if (settingsOpen !== prevSettingsOpen) {
         setPrevSettingsOpen(settingsOpen);
         setClosing(!settingsOpen);
-    }
-
-    useEffect(() => {
         if (settingsOpen) {
             setSuffixInput(exportSuffix);
             setSuffixError('');
         }
-    }, [settingsOpen, exportSuffix]);
+    }
 
     if (!settingsOpen && !closing) return null;
 

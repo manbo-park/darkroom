@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useFrameStore } from '../store/useFrameStore';
 import type { FrameItem, FrameMeta } from '../types/frame';
 import { ComboboxField } from './ComboboxField';
@@ -39,32 +39,33 @@ export function SidePanel() {
 
     const [closing, setClosing] = useState(false);
     const [inputErrors, setInputErrors] = useState<{ fNumber?: string; exposureTime?: string; iso?: string }>({});
-    const cachedFrameRef = useRef<FrameItem | null>(null);
-    const prevIdRef = useRef<string | null>(null);
+    const [cachedFrame, setCachedFrame] = useState<FrameItem | null>(null);
+    const [prevActiveId, setPrevActiveId] = useState<string | null>(activeFrameId);
 
     const frame = frames.find((f) => f.id === activeFrameId) ?? null;
-    if (frame) cachedFrameRef.current = frame;
 
-    useEffect(() => {
-        if (!activeFrameId && prevIdRef.current) {
-            setClosing(true);
-        }
+    // 활성 프레임을 상태 캐시에 보관 — 닫힘 애니메이션 중에도 마지막 프레임을 계속 표시한다.
+    if (frame && frame !== cachedFrame) setCachedFrame(frame);
+
+    // activeFrameId 전환을 렌더 중 즉시 반영한다 (effect 지연 없이).
+    if (activeFrameId !== prevActiveId) {
+        setPrevActiveId(activeFrameId);
         if (activeFrameId) {
             setClosing(false);
             setInputErrors({});
+        } else if (prevActiveId) {
+            setClosing(true);
         }
-        prevIdRef.current = activeFrameId;
-    }, [activeFrameId]);
+    }
 
     const handleAnimationEnd = () => {
         if (closing) {
             setClosing(false);
-            cachedFrameRef.current = null;
+            setCachedFrame(null);
         }
     };
 
-    const displayFrame = frame ?? cachedFrameRef.current;
-    if (!displayFrame && !closing) return null;
+    const displayFrame = frame ?? cachedFrame;
     if (!displayFrame) return null;
 
     const { meta, errors } = displayFrame;

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFrameStore } from '../store/useFrameStore';
 import type { FrameMeta } from '../types/frame';
 import { ComboboxField } from './ComboboxField';
@@ -33,14 +33,11 @@ export function BulkEditPanel() {
     const [iso, setIso] = useState('');
     const [userComment, setUserComment] = useState('');
 
-    const prevOpenRef = useRef(false);
-    const countRef = useRef(selectedIds.size);
-    countRef.current = selectedIds.size;
+    const [prevOpen, setPrevOpen] = useState(bulkEditOpen);
 
-    useEffect(() => {
-        if (!bulkEditOpen && prevOpenRef.current) {
-            setClosing(true);
-        }
+    // bulkEditOpen 전환을 렌더 중 즉시 반영한다 (effect 지연 없이).
+    if (bulkEditOpen !== prevOpen) {
+        setPrevOpen(bulkEditOpen);
         if (bulkEditOpen) {
             setClosing(false);
             setMake('');
@@ -50,9 +47,10 @@ export function BulkEditPanel() {
             setExposureTime('');
             setIso('');
             setUserComment('');
+        } else {
+            setClosing(true);
         }
-        prevOpenRef.current = bulkEditOpen;
-    }, [bulkEditOpen]);
+    }
 
     useEffect(() => {
         if (bulkEditOpen && selectedIds.size === 0) {

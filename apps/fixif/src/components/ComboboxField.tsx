@@ -12,11 +12,14 @@ interface ComboboxFieldProps {
 export function ComboboxField({ value, onChange, options, placeholder, error, className = '' }: ComboboxFieldProps) {
     const [open, setOpen] = useState(false);
     const [inputVal, setInputVal] = useState(value);
+    const [prevValue, setPrevValue] = useState(value);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
+    // 외부 value가 바뀌면 렌더 중 즉시 입력값을 동기화한다.
+    if (value !== prevValue) {
+        setPrevValue(value);
         setInputVal(value);
-    }, [value]);
+    }
 
     useEffect(() => {
         function handlePointerDown(e: PointerEvent) {

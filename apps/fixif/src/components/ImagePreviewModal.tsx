@@ -25,19 +25,36 @@ export function ImagePreviewModal({
     const hasNext = currentIndex < frames.length - 1;
     const [skipTransition, setSkipTransition] = useState(false);
     const [displayRotation, setDisplayRotation] = useState<number>(frame?.rotation ?? 0);
+    const [prevFile, setPrevFile] = useState(frame?.file);
+    const [prevFrameId, setPrevFrameId] = useState(frame?.id);
+
+    // 프레임 파일이 바뀌면 로딩 상태를 렌더 중 초기화한다.
+    if (frame && frame.file !== prevFile) {
+        setPrevFile(frame.file);
+        setLoaded(false);
+    }
+
+    // 프레임 이동 시 displayRotation을 새 프레임의 저장값으로 즉시 동기화한다.
+    if (frame && frame.id !== prevFrameId) {
+        setPrevFrameId(frame.id);
+        setDisplayRotation(frame.rotation);
+    }
+
+    const rotate = (delta: 90 | -90) => {
+        const next = displayRotation + delta;
+        setDisplayRotation(next);
+        const normalized = (((next % 360) + 360) % 360) as 0 | 90 | 180 | 270;
+        updateFrameRotation(frame.id, normalized);
+    };
 
     useEffect(() => {
         if (!frame) return;
-        setLoaded(false);
         const objectUrl = URL.createObjectURL(frame.file);
+        // ponytail: 객체 URL은 생성·해제에 effect+cleanup이 정석이라 렌더 중 파생 불가.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setUrl(objectUrl);
         return () => URL.revokeObjectURL(objectUrl);
     }, [frame?.file]);
-
-    // 프레임 이동 시 displayRotation을 새 프레임의 저장값으로 즉시 동기화
-    useEffect(() => {
-        if (frame) setDisplayRotation(frame.rotation);
-    }, [frame?.id]);
 
     useEffect(() => {
         const handleKey = (e: KeyboardEvent) => {
@@ -67,13 +84,6 @@ export function ImagePreviewModal({
     }, [onClose, onNavigate, currentIndex, hasPrev, hasNext, displayRotation]);
 
     if (!frame) return null;
-
-    const rotate = (delta: 90 | -90) => {
-        const next = displayRotation + delta;
-        setDisplayRotation(next);
-        const normalized = (((next % 360) + 360) % 360) as 0 | 90 | 180 | 270;
-        updateFrameRotation(frame.id, normalized);
-    };
 
     const normalizedRotation = ((displayRotation % 360) + 360) % 360;
     const is90or270 = normalizedRotation === 90 || normalizedRotation === 270;
