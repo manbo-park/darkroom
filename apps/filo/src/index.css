@@ -1,0 +1,80 @@
+@font-face {
+    font-family: 'JoseonGulim';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGu.woff')
+        format('woff');
+    font-weight: normal;
+    font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    * {
+        -webkit-tap-highlight-color: transparent;
+        box-sizing: border-box;
+    }
+
+    html {
+        background-color: #0a0a0a;
+    }
+
+    body {
+        background-color: #0a0a0a;
+        color: #e5e5e5;
+        font-family: 'JoseonGulim', ui-monospace, monospace;
+        overscroll-behavior: none;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* Remove input spinners */
+    input[type='number']::-webkit-outer-spin-button,
+    input[type='number']::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+        width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #2a2a2a;
+        border-radius: 2px;
+    }
+}
+
+@layer utilities {
+    .pb-safe-bottom {
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+    .pt-safe-top {
+        padding-top: env(safe-area-inset-top);
+    }
+    /* 고정 헤더(safe-area-top + h-14) 아래 콘텐츠 시작점 */
+    .pt-header {
+        padding-top: calc(env(safe-area-inset-top) + 3.5rem);
+    }
+    /* 액센트 그라데이션 배경 */
+    .accent-gradient-bg {
+        background: linear-gradient(135deg, #407c01, #d4a853);
+    }
+    .accent-gradient-bg:hover {
+        background: linear-gradient(135deg, #4d9401, #e0b85e);
+    }
+    /* 그라데이션 테두리 (어두운 배경 + 그라데이션 border) */
+    .accent-gradient-border {
+        border: 2px solid transparent;
+        background:
+            linear-gradient(#0a0a0a, #0a0a0a) padding-box,
+            linear-gradient(135deg, #407c01, #d4a853) border-box;
+    }
+    .muted-border {
+        border: 2px solid #666666;
+        background: #0a0a0a;
+    }
+}
