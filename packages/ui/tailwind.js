@@ -69,6 +69,8 @@ export default {
 
             const gradient = `linear-gradient(135deg, #407c01, ${colors.accent})`;
             addUtilities({
+                // 하단 safe-area 여백 (Modal 시트가 사용)
+                '.pb-safe-bottom': { paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' },
                 // 액센트 그라데이션 배경
                 '.accent-gradient-bg': { background: gradient },
                 '.accent-gradient-bg:hover': {
