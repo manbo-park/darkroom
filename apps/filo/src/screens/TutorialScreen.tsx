@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Aperture, Database, Film, Settings } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@darkroom/ui';
 import { useSettingsStore } from '@/store/settingsStore';
 
 interface Slide {

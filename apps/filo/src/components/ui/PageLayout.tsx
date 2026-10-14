@@ -1,7 +1,7 @@
 import { type ReactNode, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { lockBodyScroll, unlockBodyScroll } from '@/lib/scrollLock';
+import { lockBodyScroll, unlockBodyScroll } from '@darkroom/ui';
 
 interface PageLayoutProps {
     title: ReactNode;

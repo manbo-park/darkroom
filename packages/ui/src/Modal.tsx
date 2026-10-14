@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from 'react';
 import { X } from 'lucide-react';
-import { lockBodyScroll, unlockBodyScroll } from '@/lib/scrollLock';
+import { lockBodyScroll, unlockBodyScroll } from './scrollLock';
 
 interface ModalProps {
     isOpen: boolean;

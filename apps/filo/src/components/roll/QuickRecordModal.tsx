@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import { Modal } from '@/components/ui/Modal';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
+import { Modal, Button, Input, Select } from '@darkroom/ui';
 import { getApertureOptions, SHUTTER_OPTIONS } from '@/lib/frameOptions';
 import { useRollStore } from '@/store/rollStore';
 import { useMasterDataStore } from '@/store/masterDataStore';
