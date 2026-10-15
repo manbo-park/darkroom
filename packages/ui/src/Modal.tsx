@@ -5,16 +5,28 @@ import { lockBodyScroll, unlockBodyScroll } from './scrollLock';
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
-    title: string;
+    title: ReactNode;
     children: ReactNode;
     /** sheet: 모바일 하단 시트(기본), dialog: 데스크톱 중앙 다이얼로그 */
     layout?: 'sheet' | 'dialog';
+    /** 표처럼 폭이 필요한 내용용 (max-w-2xl) */
+    wide?: boolean;
+    /** 본문 아래 고정 영역. 본문만 스크롤되고 footer는 항상 보인다. */
+    footer?: ReactNode;
 }
 
 // 열린 모달 순서. Esc는 맨 위 모달만 닫아 아래 모달의 입력이 함께 사라지지 않게 한다.
 const openStack: object[] = [];
 
-export function Modal({ isOpen, onClose, title, children, layout = 'sheet' }: ModalProps) {
+export function Modal({
+    isOpen,
+    onClose,
+    title,
+    children,
+    layout = 'sheet',
+    wide = false,
+    footer,
+}: ModalProps) {
     const titleId = useId();
     const handleClose = useEffectEvent(onClose);
 
@@ -55,10 +67,11 @@ export function Modal({ isOpen, onClose, title, children, layout = 'sheet' }: Mo
                 aria-modal="true"
                 aria-labelledby={titleId}
                 className={[
-                    'relative w-full max-w-lg bg-film-surface border border-film-border',
+                    'relative w-full bg-film-surface border border-film-border',
+                    wide ? 'max-w-2xl' : 'max-w-lg',
                     isSheet
                         ? 'rounded-t-2xl animate-slide-up pb-safe-bottom'
-                        : 'rounded-2xl animate-fade-in',
+                        : 'rounded-2xl animate-fade-in flex flex-col max-h-[80vh]',
                 ].join(' ')}
                 onClick={(e) => e.stopPropagation()}
             >
@@ -70,7 +83,7 @@ export function Modal({ isOpen, onClose, title, children, layout = 'sheet' }: Mo
                 )}
 
                 {/* Header */}
-                <div className="flex items-center justify-between px-5 py-3 border-b border-film-border">
+                <div className="shrink-0 flex items-center justify-between px-5 py-3 border-b border-film-border">
                     <h2
                         id={titleId}
                         className="text-film-text font-mono font-semibold text-sm uppercase tracking-wider"
@@ -87,7 +100,16 @@ export function Modal({ isOpen, onClose, title, children, layout = 'sheet' }: Mo
                 </div>
 
                 {/* Body */}
-                <div className="px-5 py-5 max-h-[70vh] overflow-y-auto">{children}</div>
+                <div
+                    className={`px-5 py-5 overflow-y-auto ${isSheet ? 'max-h-[70vh]' : 'flex-1 min-h-0'}`}
+                >
+                    {children}
+                </div>
+
+                {/* Footer */}
+                {footer && (
+                    <div className="shrink-0 px-5 py-3 border-t border-film-border">{footer}</div>
+                )}
             </div>
         </div>
     );
