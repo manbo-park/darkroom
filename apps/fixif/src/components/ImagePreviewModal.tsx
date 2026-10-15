@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, LoaderCircle, RotateCcw, RotateCw, X } from 'lucide-react';
 import type { FrameItem } from '../types/frame';
+import { Button } from '@darkroom/ui';
 import { useFrameStore } from '../store/useFrameStore';
 
 interface ImagePreviewModalProps {
@@ -91,15 +92,16 @@ export function ImagePreviewModal({
 
     return (
         <div
-            className="fixed inset-0 z-50 bg-black/80 flex flex-col items-center pt-14 pb-4"
+            className="fixed inset-0 z-50 bg-film-bg/95 flex flex-col items-center pt-14 pb-4"
             onClick={onClose}
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
         >
             {/* 닫기 버튼 */}
             <button
-                className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white z-10"
+                className="absolute top-4 right-4 p-2 rounded-full bg-film-surface/80 border border-film-border text-film-muted hover:text-film-text transition-colors z-10"
                 onClick={onClose}
+                aria-label="닫기"
             >
                 <X size={20} />
             </button>
@@ -109,13 +111,14 @@ export function ImagePreviewModal({
                 {/* 이전 화살표 */}
                 {hasPrev && (
                     <button
-                        className={`absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/25 text-white transition-opacity duration-200 z-10 ${hovering ? 'opacity-100' : 'opacity-0'}`}
+                        className={`absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-film-surface/80 border border-film-border text-film-muted hover:text-film-text transition-[opacity,color] duration-200 z-10 ${hovering ? 'opacity-100' : 'opacity-0'}`}
                         onClick={(e) => {
                             e.stopPropagation();
                             setSkipTransition(true);
                             setLoaded(false);
                             onNavigate(currentIndex - 1);
                         }}
+                        aria-label="이전 이미지"
                     >
                         <ChevronLeft size={24} />
                     </button>
@@ -124,13 +127,14 @@ export function ImagePreviewModal({
                 {/* 다음 화살표 */}
                 {hasNext && (
                     <button
-                        className={`absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/25 text-white transition-opacity duration-200 z-10 ${hovering ? 'opacity-100' : 'opacity-0'}`}
+                        className={`absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-film-surface/80 border border-film-border text-film-muted hover:text-film-text transition-[opacity,color] duration-200 z-10 ${hovering ? 'opacity-100' : 'opacity-0'}`}
                         onClick={(e) => {
                             e.stopPropagation();
                             setSkipTransition(true);
                             setLoaded(false);
                             onNavigate(currentIndex + 1);
                         }}
+                        aria-label="다음 이미지"
                     >
                         <ChevronRight size={24} />
                     </button>
@@ -138,7 +142,7 @@ export function ImagePreviewModal({
 
                 {/* 스피너 */}
                 {!loaded && (
-                    <LoaderCircle size={40} className="text-white/50 animate-spin absolute" />
+                    <LoaderCircle size={40} className="text-film-muted animate-spin absolute" />
                 )}
 
                 {/* 이미지 */}
@@ -165,27 +169,29 @@ export function ImagePreviewModal({
                 className="flex-shrink-0 mt-3 flex flex-col items-center gap-3"
                 onClick={(e) => e.stopPropagation()}
             >
-                <p className="text-sm text-white/60 select-none">{frame.file.name}</p>
+                <p className="text-sm text-film-muted select-none">{frame.file.name}</p>
                 <div className="flex gap-2">
-                    <button
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs transition-colors"
+                    <Button
+                        size="sm"
+                        className="flex items-center gap-1.5"
                         onClick={() => rotate(-90)}
                         title="왼쪽으로 90° 회전"
                     >
                         <RotateCcw size={14} />
                         왼쪽으로 90° 회전(Q)
-                    </button>
-                    <button
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs transition-colors"
+                    </Button>
+                    <Button
+                        size="sm"
+                        className="flex items-center gap-1.5"
                         onClick={() => rotate(90)}
                         title="오른쪽으로 90° 회전"
                     >
                         <RotateCw size={14} />
                         오른쪽으로 90° 회전(E)
-                    </button>
+                    </Button>
                     {normalizedRotation !== 0 && (
-                        <button
-                            className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs transition-colors"
+                        <Button
+                            size="sm"
                             onClick={() => {
                                 setDisplayRotation(0);
                                 updateFrameRotation(frame.id, 0);
@@ -193,7 +199,7 @@ export function ImagePreviewModal({
                             title="회전 초기화"
                         >
                             초기화(R)
-                        </button>
+                        </Button>
                     )}
                 </div>
             </div>
