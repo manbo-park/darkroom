@@ -42,7 +42,7 @@ export function FrameToolbar() {
         try {
             const payload = await decodeClipboardPayload(trimmed);
             if (!payload) {
-                toast('유효하지 않은 Filo 데이터입니다');
+                toast('유효하지 않은 filo 데이터입니다');
                 return;
             }
             setFiloInputOpen(false);
