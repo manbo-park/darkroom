@@ -147,7 +147,7 @@ export function ImagePreviewModal({
 
                 {/* 이미지 */}
                 <img
-                    src={url}
+                    src={url || undefined}
                     alt={frame.file.name}
                     className={`object-contain rounded shadow-2xl ${skipTransition ? '' : 'transition-[opacity,transform] duration-300'} ${loaded ? 'opacity-100' : 'opacity-0 min-h-[30vh]'}`}
                     style={{
