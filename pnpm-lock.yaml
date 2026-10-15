@@ -108,6 +108,9 @@ importers:
       jszip:
         specifier: ^3.10.1
         version: 3.10.1
+      lucide-react:
+        specifier: ^1.8.0
+        version: 1.24.0(react@19.2.7)
       piexifjs:
         specifier: ^1.0.6
         version: 1.0.6

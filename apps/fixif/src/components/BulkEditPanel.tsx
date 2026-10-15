@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { X } from 'lucide-react';
 import { Button, Input, fieldClass, labelClass } from '@darkroom/ui';
 import { useFrameStore } from '../store/useFrameStore';
 import type { FrameMeta } from '../types/frame';
@@ -102,15 +103,7 @@ export function BulkEditPanel() {
                         onClick={handleClose}
                         className="shrink-0 p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600"
                     >
-                        <svg
-                            className="w-4 h-4"
-                            viewBox="0 0 16 16"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                        >
-                            <path d="M3 3l10 10M13 3L3 13" />
-                        </svg>
+                        <X size={16} />
                     </button>
                 </div>
 

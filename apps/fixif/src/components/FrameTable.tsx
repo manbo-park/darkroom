@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { GripVertical } from 'lucide-react';
 import {
     DndContext,
     PointerSensor,
@@ -156,18 +157,7 @@ function FrameRow({ frame, onPreview, dragEnabled }: FrameRowProps) {
                         className="cursor-grab active:cursor-grabbing p-0.5 text-gray-300 hover:text-gray-500 transition-colors"
                         tabIndex={-1}
                     >
-                        <svg
-                            className="w-3.5 h-3.5"
-                            viewBox="0 0 16 16"
-                            fill="currentColor"
-                        >
-                            <circle cx="5" cy="4" r="1.2" />
-                            <circle cx="11" cy="4" r="1.2" />
-                            <circle cx="5" cy="8" r="1.2" />
-                            <circle cx="11" cy="8" r="1.2" />
-                            <circle cx="5" cy="12" r="1.2" />
-                            <circle cx="11" cy="12" r="1.2" />
-                        </svg>
+                        <GripVertical size={14} />
                     </button>
                 </td>
             )}
@@ -273,9 +263,7 @@ export function FrameTable() {
         });
     }, [frames, sortKey, sortDir]);
 
-    const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
-    );
+    const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -290,11 +278,7 @@ export function FrameTable() {
     const thProps = { current: sortKey, dir: sortDir, onSort: handleSort };
 
     return (
-        <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-        >
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <div className="overflow-x-auto">
                 <table className="min-w-full text-left">
                     <thead className="bg-gray-50 border-b border-gray-200 text-xs text-gray-500 uppercase tracking-wide">

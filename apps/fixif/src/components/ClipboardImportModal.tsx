@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Info, TriangleAlert } from 'lucide-react';
 import { useFrameStore } from '../store/useFrameStore';
 import { useToastStore } from '../store/useToastStore';
 import { matchFrames, filoFrameToMetaPatch } from '../lib/matching';
@@ -50,7 +51,9 @@ export function ClipboardImportModal() {
     useEffect(() => {
         if (!pendingImport) return;
         document.body.style.overflow = 'hidden';
-        return () => { document.body.style.overflow = ''; };
+        return () => {
+            document.body.style.overflow = '';
+        };
     }, [pendingImport]);
 
     if (!pendingImport) return null;
@@ -178,17 +181,7 @@ export function ClipboardImportModal() {
                                             </span>
                                         ) : (
                                             <span className="flex items-center gap-1 text-red-500">
-                                                <svg
-                                                    className="w-3 h-3 shrink-0"
-                                                    viewBox="0 0 16 16"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M8 1a7 7 0 100 14A7 7 0 008 1zM7 5a1 1 0 112 0v3a1 1 0 11-2 0V5zm1 6a1 1 0 100-2 1 1 0 000 2z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
+                                                <Info size={12} className="shrink-0" />
                                                 매칭 안됨
                                             </span>
                                         )}
@@ -196,7 +189,10 @@ export function ClipboardImportModal() {
                                     <td className="px-4 py-2.5 text-gray-500">
                                         {filoFrame.t ? formatTime(filoFrame.t) : '-'}
                                     </td>
-                                    <td className="px-4 py-2.5 text-gray-500 max-w-[140px] truncate" title={filoFrame.lens ?? ''}>
+                                    <td
+                                        className="px-4 py-2.5 text-gray-500 max-w-[140px] truncate"
+                                        title={filoFrame.lens ?? ''}
+                                    >
                                         {filoFrame.lens ?? '-'}
                                     </td>
                                     <td className="px-4 py-2.5 text-gray-500">
@@ -207,7 +203,10 @@ export function ClipboardImportModal() {
                                     <td className="px-4 py-2.5 text-gray-500">
                                         {filoFrame.shutter ?? '-'}
                                     </td>
-                                    <td className="px-4 py-2.5 text-gray-500 max-w-[160px] truncate" title={filoFrame.memo ?? ''}>
+                                    <td
+                                        className="px-4 py-2.5 text-gray-500 max-w-[160px] truncate"
+                                        title={filoFrame.memo ?? ''}
+                                    >
                                         {filoFrame.memo ?? '-'}
                                     </td>
                                 </tr>
@@ -239,17 +238,7 @@ export function ClipboardImportModal() {
                     </div>
                     {unmatchedCount > 0 && (
                         <p className="text-xs text-amber-600 flex items-center gap-1.5">
-                            <svg
-                                className="w-3.5 h-3.5 shrink-0"
-                                viewBox="0 0 16 16"
-                                fill="currentColor"
-                            >
-                                <path
-                                    fillRule="evenodd"
-                                    d="M8.485 2.495c-.673-1.167-2.357-1.167-3.03 0L.795 13.5c-.673 1.167.168 2.625 1.515 2.625h11.38c1.347 0 2.188-1.458 1.515-2.625L8.485 2.495zM8 6a1 1 0 00-1 1v3a1 1 0 102 0V7a1 1 0 00-1-1zm-1 6a1 1 0 112 0 1 1 0 01-2 0z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
+                            <TriangleAlert size={14} className="shrink-0" />
                             {unmatchedCount}개 filo 프레임이 파일과 매칭되지 않아 적용에서
                             제외됩니다
                         </p>

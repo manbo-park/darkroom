@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { ChevronDown } from 'lucide-react';
 
 interface ComboboxFieldProps {
     value: string;
@@ -9,7 +10,14 @@ interface ComboboxFieldProps {
     className?: string;
 }
 
-export function ComboboxField({ value, onChange, options, placeholder, error, className = '' }: ComboboxFieldProps) {
+export function ComboboxField({
+    value,
+    onChange,
+    options,
+    placeholder,
+    error,
+    className = '',
+}: ComboboxFieldProps) {
     const [open, setOpen] = useState(false);
     const [inputVal, setInputVal] = useState(value);
     const [prevValue, setPrevValue] = useState(value);
@@ -87,9 +95,7 @@ export function ComboboxField({ value, onChange, options, placeholder, error, cl
                         setOpen((o) => !o);
                     }}
                 >
-                    <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M8 11L2 5h12L8 11z" />
-                    </svg>
+                    <ChevronDown size={14} />
                 </button>
             </div>
             {open && filtered.length > 0 && (
@@ -98,7 +104,9 @@ export function ComboboxField({ value, onChange, options, placeholder, error, cl
                         <li
                             key={opt}
                             className={`px-3 py-1.5 cursor-pointer hover:bg-blue-50 ${
-                                opt === value ? 'text-blue-600 font-medium bg-blue-50/50' : 'text-gray-700'
+                                opt === value
+                                    ? 'text-blue-600 font-medium bg-blue-50/50'
+                                    : 'text-gray-700'
                             }`}
                             onPointerDown={(e) => {
                                 e.preventDefault();

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { ChevronLeft, ChevronRight, LoaderCircle, RotateCcw, RotateCw, X } from 'lucide-react';
 import type { FrameItem } from '../types/frame';
 import { useFrameStore } from '../store/useFrameStore';
 
@@ -100,15 +101,7 @@ export function ImagePreviewModal({
                 className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white z-10"
                 onClick={onClose}
             >
-                <svg
-                    className="w-5 h-5"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                >
-                    <path d="M3 3l10 10M13 3L3 13" />
-                </svg>
+                <X size={20} />
             </button>
 
             {/* 이미지 + 화살표 영역 */}
@@ -124,17 +117,7 @@ export function ImagePreviewModal({
                             onNavigate(currentIndex - 1);
                         }}
                     >
-                        <svg
-                            className="w-6 h-6"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="M15 18l-6-6 6-6" />
-                        </svg>
+                        <ChevronLeft size={24} />
                     </button>
                 )}
 
@@ -149,41 +132,13 @@ export function ImagePreviewModal({
                             onNavigate(currentIndex + 1);
                         }}
                     >
-                        <svg
-                            className="w-6 h-6"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="M9 18l6-6-6-6" />
-                        </svg>
+                        <ChevronRight size={24} />
                     </button>
                 )}
 
                 {/* 스피너 */}
                 {!loaded && (
-                    <svg
-                        className="w-10 h-10 text-white/50 animate-spin absolute"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                    >
-                        <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                        />
-                        <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                        />
-                    </svg>
+                    <LoaderCircle size={40} className="text-white/50 animate-spin absolute" />
                 )}
 
                 {/* 이미지 */}
@@ -217,18 +172,7 @@ export function ImagePreviewModal({
                         onClick={() => rotate(-90)}
                         title="왼쪽으로 90° 회전"
                     >
-                        <svg
-                            className="w-3.5 h-3.5"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                            <path d="M3 3v5h5" />
-                        </svg>
+                        <RotateCcw size={14} />
                         왼쪽으로 90° 회전(Q)
                     </button>
                     <button
@@ -236,18 +180,7 @@ export function ImagePreviewModal({
                         onClick={() => rotate(90)}
                         title="오른쪽으로 90° 회전"
                     >
-                        <svg
-                            className="w-3.5 h-3.5"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="M21 12a9 9 0 1 1-9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                            <path d="M21 3v5h-5" />
-                        </svg>
+                        <RotateCw size={14} />
                         오른쪽으로 90° 회전(E)
                     </button>
                     {normalizedRotation !== 0 && (
