@@ -1,4 +1,5 @@
-import type { InputHTMLAttributes } from 'react';
+import { useId, type InputHTMLAttributes } from 'react';
+import { fieldClass, labelClass } from './field';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     label?: string;
@@ -6,28 +7,20 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export function Input({ label, error, className = '', id, ...props }: InputProps) {
-    const inputId = id ?? label?.toLowerCase().replace(/\s+/g, '-');
+    const autoId = useId();
+    const inputId = id ?? autoId;
 
     return (
         <div className="flex flex-col gap-1.5">
             {label && (
-                <label
-                    htmlFor={inputId}
-                    className="text-xs font-mono text-film-muted uppercase tracking-wider"
-                >
+                <label htmlFor={inputId} className={labelClass}>
                     {label}
                 </label>
             )}
             <input
                 id={inputId}
                 {...props}
-                className={[
-                    'bg-film-bg border border-film-border rounded-lg px-3 py-2.5',
-                    'text-film-text font-mono text-sm placeholder-film-muted',
-                    'focus:outline-none focus:border-film-accent transition-colors',
-                    error ? 'border-film-danger' : '',
-                    className,
-                ]
+                className={[fieldClass, error ? 'border-film-danger' : '', className]
                     .filter(Boolean)
                     .join(' ')}
             />

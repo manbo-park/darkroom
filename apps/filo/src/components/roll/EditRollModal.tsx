@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { Modal, Button, Input, Select } from '@darkroom/ui';
+import { Modal, Button, Input, Select, fieldClass, labelClass } from '@darkroom/ui';
 import { useRollStore } from '@/store/rollStore';
 import { useMasterDataStore } from '@/store/masterDataStore';
 
@@ -59,15 +59,13 @@ export function EditRollModal({ rollId, isOpen, onClose }: EditRollModalProps) {
                     placeholder="36"
                 />
                 <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-mono text-film-muted uppercase tracking-wider">
-                        메모
-                    </label>
+                    <label className={labelClass}>메모</label>
                     <textarea
                         value={memo}
                         onChange={(e) => setMemo(e.target.value)}
                         placeholder="이 롤에 대한 메모..."
                         rows={3}
-                        className="bg-film-bg border border-film-border rounded-lg px-3 py-2.5 text-film-text font-mono text-sm placeholder-film-muted focus:outline-none focus:border-film-accent transition-colors resize-none"
+                        className={`${fieldClass} resize-none`}
                     />
                 </div>
                 <div className="flex gap-3 mt-1">
