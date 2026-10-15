@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { ClipboardPaste, LoaderCircle, Pencil, Redo2, Trash2, Undo2, Upload } from 'lucide-react';
-import { Button } from '@darkroom/ui';
+import { Button, Modal, fieldClass } from '@darkroom/ui';
 import { useFrameStore } from '../store/useFrameStore';
 import { useToastStore } from '../store/useToastStore';
 import { useSettingsStore } from '../store/useSettingsStore';
@@ -167,72 +167,46 @@ export function FrameToolbar() {
                 </span>
             </div>
 
-            {filoInputOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div
-                        className="absolute inset-0 bg-black/30"
-                        onClick={() => setFiloInputOpen(false)}
+            <Modal
+                isOpen={filoInputOpen}
+                onClose={() => setFiloInputOpen(false)}
+                title={
+                    <>
+                        <span className="normal-case">filo</span> 데이터 붙여넣기
+                    </>
+                }
+                layout="dialog"
+            >
+                <div className="flex flex-col gap-4">
+                    <p className="text-xs text-film-muted">
+                        filo 앱에서 복사한 코드를 붙여넣으세요.
+                    </p>
+                    <textarea
+                        ref={textareaRef}
+                        value={filoText}
+                        onChange={(e) => setFiloText(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleFiloSubmit();
+                        }}
+                        placeholder="FILO1:..."
+                        rows={4}
+                        className={`${fieldClass} w-full resize-none`}
                     />
-                    <div className="relative z-10 bg-white rounded-xl border border-gray-200 shadow-2xl w-full max-w-lg flex flex-col gap-4 p-5">
-                        <div className="flex items-start justify-between gap-2">
-                            <div>
-                                <h2 className="text-sm font-semibold text-gray-800">
-                                    filo 데이터 붙여넣기
-                                </h2>
-                                <p className="text-xs text-gray-400 mt-0.5">
-                                    filo 앱에서 복사한 코드를 붙여넣으세요.
-                                </p>
-                            </div>
-                            <button
-                                onClick={() => setFiloInputOpen(false)}
-                                className="shrink-0 p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600"
-                            >
-                                <svg
-                                    className="w-4 h-4"
-                                    viewBox="0 0 16 16"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                >
-                                    <path d="M3 3l10 10M13 3L3 13" />
-                                </svg>
-                            </button>
-                        </div>
-                        <textarea
-                            ref={textareaRef}
-                            value={filoText}
-                            onChange={(e) => setFiloText(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' && (e.metaKey || e.ctrlKey))
-                                    handleFiloSubmit();
-                            }}
-                            placeholder="FILO1:..."
-                            rows={4}
-                            className="w-full text-xs font-mono border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-300"
-                        />
-                        <div className="flex justify-end gap-2">
-                            <button
-                                onClick={() => setFiloInputOpen(false)}
-                                className="px-4 py-1.5 text-sm font-medium text-gray-600 rounded-lg border border-gray-200 hover:bg-gray-50 active:bg-gray-100 transition-colors"
-                            >
-                                취소
-                            </button>
-                            <button
-                                onClick={handleFiloSubmit}
-                                disabled={!filoText.trim() || filoLoading}
-                                className={[
-                                    'px-4 py-1.5 text-sm font-medium rounded-lg transition-colors',
-                                    filoText.trim() && !filoLoading
-                                        ? 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800'
-                                        : 'bg-gray-200 text-gray-400 cursor-not-allowed',
-                                ].join(' ')}
-                            >
-                                {filoLoading ? '처리 중…' : '불러오기'}
-                            </button>
-                        </div>
+                    <div className="flex justify-end gap-2">
+                        <Button size="sm" onClick={() => setFiloInputOpen(false)}>
+                            취소
+                        </Button>
+                        <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={handleFiloSubmit}
+                            disabled={!filoText.trim() || filoLoading}
+                        >
+                            {filoLoading ? '처리 중…' : '불러오기'}
+                        </Button>
                     </div>
                 </div>
-            )}
+            </Modal>
         </div>
     );
 }
