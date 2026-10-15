@@ -47,11 +47,11 @@ export function ComboboxField({
         setOpen(false);
     };
 
+    // 지연 없이 즉시 커밋한다. 지연하면 입력 직후 누른 버튼(예: 일괄 적용)이 이전 값으로 동작한다.
+    // 옵션·토글 클릭은 pointerdown에서 preventDefault 하므로 blur가 먼저 일어나지 않는다.
     const handleBlur = () => {
-        setTimeout(() => {
-            onChange(inputVal);
-            setOpen(false);
-        }, 100);
+        onChange(inputVal);
+        setOpen(false);
     };
 
     return (
