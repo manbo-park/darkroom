@@ -77,18 +77,20 @@ export function SidePanel() {
     return (
         <>
             <div
-                className="fixed inset-0 z-30 bg-black/20"
+                className="fixed inset-0 z-30 bg-black/40"
                 onClick={() => setActiveFrameId(null)}
             />
             <aside
-                className={`fixed right-4 top-4 bottom-4 w-80 bg-white rounded-xl border border-gray-200 shadow-2xl flex flex-col z-40 overflow-hidden ${closing ? 'animate-slide-out' : 'animate-slide-in'}`}
+                className={`fixed right-4 top-4 bottom-4 w-80 bg-film-surface rounded-xl border border-film-border shadow-2xl flex flex-col z-40 overflow-hidden ${closing ? 'animate-slide-out' : 'animate-slide-in'}`}
                 onAnimationEnd={handleAnimationEnd}
             >
-                <div className="px-4 py-3 border-b border-gray-100 flex items-start justify-between gap-2 shrink-0">
+                <div className="px-4 py-3 border-b border-film-border flex items-start justify-between gap-2 shrink-0">
                     <div className="min-w-0">
-                        <h2 className="text-sm font-semibold text-gray-800">프레임 편집</h2>
+                        <h2 className="text-film-text font-semibold text-sm uppercase tracking-wider">
+                            프레임 편집
+                        </h2>
                         <p
-                            className="text-xs text-gray-400 mt-0.5 truncate"
+                            className="text-xs text-film-muted mt-0.5 truncate"
                             title={displayFrame.file.name}
                         >
                             {displayFrame.file.name}
@@ -96,9 +98,10 @@ export function SidePanel() {
                     </div>
                     <button
                         onClick={() => setActiveFrameId(null)}
-                        className="shrink-0 p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600"
+                        aria-label="닫기"
+                        className="shrink-0 text-film-muted hover:text-film-text transition-colors"
                     >
-                        <X size={16} />
+                        <X size={18} />
                     </button>
                 </div>
 

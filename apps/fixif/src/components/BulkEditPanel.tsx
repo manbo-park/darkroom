@@ -89,26 +89,31 @@ export function BulkEditPanel() {
 
     return (
         <>
-            <div className="fixed inset-0 z-30 bg-black/20" onClick={handleClose} />
+            <div className="fixed inset-0 z-30 bg-black/40" onClick={handleClose} />
             <aside
-                className={`fixed right-4 top-4 bottom-4 w-80 bg-white rounded-xl border border-gray-200 shadow-2xl flex flex-col z-40 overflow-hidden ${closing ? 'animate-slide-out' : 'animate-slide-in'}`}
+                className={`fixed right-4 top-4 bottom-4 w-80 bg-film-surface rounded-xl border border-film-border shadow-2xl flex flex-col z-40 overflow-hidden ${closing ? 'animate-slide-out' : 'animate-slide-in'}`}
                 onAnimationEnd={handleAnimationEnd}
             >
-                <div className="px-4 py-3 border-b border-gray-100 flex items-start justify-between gap-2 shrink-0">
+                <div className="px-4 py-3 border-b border-film-border flex items-start justify-between gap-2 shrink-0">
                     <div className="min-w-0">
-                        <h2 className="text-sm font-semibold text-gray-800">일괄 편집</h2>
-                        <p className="text-xs text-gray-400 mt-0.5">{selectedIds.size}개 선택됨</p>
+                        <h2 className="text-film-text font-semibold text-sm uppercase tracking-wider">
+                            일괄 편집
+                        </h2>
+                        <p className="text-xs text-film-muted mt-0.5">
+                            {selectedIds.size}개 선택됨
+                        </p>
                     </div>
                     <button
                         onClick={handleClose}
-                        className="shrink-0 p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600"
+                        aria-label="닫기"
+                        className="shrink-0 text-film-muted hover:text-film-text transition-colors"
                     >
-                        <X size={16} />
+                        <X size={18} />
                     </button>
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-film-muted">
                         값을 입력한 필드만 선택된 프레임에 일괄 적용됩니다.
                     </p>
 
@@ -177,7 +182,7 @@ export function BulkEditPanel() {
                     </FieldRow>
                 </div>
 
-                <div className="px-4 py-3 border-t border-gray-100 shrink-0">
+                <div className="px-4 py-3 border-t border-film-border shrink-0">
                     <Button variant="primary" fullWidth onClick={handleApply}>
                         일괄 적용
                     </Button>

@@ -77,10 +77,10 @@ export function FrameToolbar() {
     };
 
     return (
-        <div className="px-4 py-2.5 border-b border-gray-100 flex items-center gap-3 text-sm text-gray-500">
+        <div className="px-4 py-2.5 border-b border-film-border flex items-center gap-3 text-sm text-film-muted">
             <span>{frames.length}개 프레임</span>
             {selectedIds.size > 0 && (
-                <span className="text-blue-600 font-medium">{selectedIds.size}개 선택됨</span>
+                <span className="text-film-accent">{selectedIds.size}개 선택됨</span>
             )}
 
             <div className="flex items-center gap-0.5">
@@ -88,7 +88,7 @@ export function FrameToolbar() {
                     onClick={undo}
                     disabled={past.length === 0}
                     title="실행 취소 (Ctrl+Z)"
-                    className="p-1.5 rounded text-gray-400 hover:text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    className="p-1.5 text-film-muted hover:text-film-text disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 >
                     <Undo2 size={16} />
                 </button>
@@ -96,7 +96,7 @@ export function FrameToolbar() {
                     onClick={redo}
                     disabled={future.length === 0}
                     title="다시 실행 (Ctrl+Shift+Z)"
-                    className="p-1.5 rounded text-gray-400 hover:text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    className="p-1.5 text-film-muted hover:text-film-text disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 >
                     <Redo2 size={16} />
                 </button>
@@ -131,7 +131,7 @@ export function FrameToolbar() {
                     </>
                 )}
                 {errorCount > 0 && (
-                    <span className="text-xs text-red-500 font-medium">오류 {errorCount}개</span>
+                    <span className="text-xs text-film-danger">오류 {errorCount}개</span>
                 )}
                 <Button size="sm" className="flex items-center gap-1.5" onClick={handleFiloOpen}>
                     <ClipboardPaste size={16} />

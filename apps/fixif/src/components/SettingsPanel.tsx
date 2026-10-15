@@ -45,28 +45,31 @@ export function SettingsPanel() {
     return (
         <>
             <div
-                className="fixed inset-0 z-30 bg-black/20"
+                className="fixed inset-0 z-30 bg-black/40"
                 onClick={() => setSettingsOpen(false)}
             />
             <aside
-                className={`fixed right-4 top-4 bottom-4 w-72 bg-white rounded-xl border border-gray-200 shadow-2xl flex flex-col z-40 overflow-hidden ${closing ? 'animate-slide-out' : 'animate-slide-in'}`}
+                className={`fixed right-4 top-4 bottom-4 w-72 bg-film-surface rounded-xl border border-film-border shadow-2xl flex flex-col z-40 overflow-hidden ${closing ? 'animate-slide-out' : 'animate-slide-in'}`}
                 onAnimationEnd={() => {
                     if (closing) setClosing(false);
                 }}
             >
-                <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between shrink-0">
-                    <h2 className="text-sm font-semibold text-gray-800">설정</h2>
+                <div className="px-4 py-3 border-b border-film-border flex items-center justify-between shrink-0">
+                    <h2 className="text-film-text font-semibold text-sm uppercase tracking-wider">
+                        설정
+                    </h2>
                     <button
                         onClick={() => setSettingsOpen(false)}
-                        className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600"
+                        aria-label="닫기"
+                        className="text-film-muted hover:text-film-text transition-colors"
                     >
-                        <X size={16} />
+                        <X size={18} />
                     </button>
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-6">
                     <div>
-                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+                        <p className="text-xs text-film-muted uppercase tracking-widest mb-3">
                             내보내기
                         </p>
                         <div className="space-y-3">
@@ -79,9 +82,8 @@ export function SettingsPanel() {
                                 error={suffixError}
                             />
                             {!suffixError && (
-                                <p className="text-xs text-gray-400">
-                                    예:{' '}
-                                    <span className="font-mono text-gray-500">{previewName}</span>
+                                <p className="text-xs text-film-muted">
+                                    예: <span className="text-film-text">{previewName}</span>
                                 </p>
                             )}
                             <Switch
