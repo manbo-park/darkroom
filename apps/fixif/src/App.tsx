@@ -49,12 +49,14 @@ function App() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-                <h1 className="text-xl font-semibold text-gray-800 tracking-tight">fixif</h1>
+        <div className="min-h-screen">
+            <header className="h-14 border-b border-film-border px-6 flex items-center justify-between">
+                <h1 className="text-film-text font-mono font-semibold tracking-wider text-sm">
+                    fixif
+                </h1>
                 <button
                     onClick={() => setSettingsOpen(true)}
-                    className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                    className="p-1 text-film-muted hover:text-film-text transition-colors"
                     title="설정"
                 >
                     <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
@@ -69,7 +71,7 @@ function App() {
             <main className="max-w-screen-2xl mx-auto p-6 space-y-4">
                 <Dropzone />
                 {frames.length > 0 && (
-                    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <div className="bg-film-surface rounded-xl border border-film-border overflow-hidden">
                         <FrameToolbar />
                         <FrameTable />
                     </div>

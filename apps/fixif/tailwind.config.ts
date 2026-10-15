@@ -1,9 +1,7 @@
 import type { Config } from 'tailwindcss';
+import darkroom from '@darkroom/ui/tailwind';
 
 export default {
-    content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
-    theme: {
-        extend: {},
-    },
-    plugins: [],
+    presets: [darkroom],
+    content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}', '../../packages/ui/src/**/*.{ts,tsx}'],
 } satisfies Config;
