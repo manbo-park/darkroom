@@ -45,12 +45,10 @@ src/
 │   ├── FrameTable.tsx          # 프레임 리스트 테이블 (행 = 프레임)
 │   ├── FrameToolbar.tsx        # 상단 툴바 (Undo/Redo, 일괄 편집 등)
 │   ├── SidePanel.tsx           # 단일 프레임 편집 사이드 패널
-│   ├── BulkEditBar.tsx         # 다중 선택 시 액션 바
 │   ├── BulkEditPanel.tsx       # 일괄 편집 패널
 │   ├── ClipboardImportModal.tsx# filo 데이터 매칭 미리보기 모달
 │   ├── ComboboxField.tsx       # 프리셋 + 자유입력 콤보박스
 │   ├── ImagePreviewModal.tsx   # 이미지 미리보기/회전 모달
-│   ├── ExportBar.tsx           # 내보내기 바
 │   ├── SettingsPanel.tsx       # 설정 패널
 │   └── Toast.tsx               # 토스트 알림
 ├── lib/                    # 도메인 로직 (UI 비의존)
