@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { Modal } from '@/components/ui/Modal';
-import { Button } from '@/components/ui/Button';
-import { Select } from '@/components/ui/Select';
+import { Modal, Button, Select } from '@darkroom/ui';
 import { useRollStore } from '@/store/rollStore';
 import type { Frame } from '@/types';
 

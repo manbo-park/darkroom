@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { X } from 'lucide-react';
+import { Button, Input, fieldClass, labelClass } from '@darkroom/ui';
 import { useFrameStore } from '../store/useFrameStore';
 import type { FrameMeta } from '../types/frame';
 import { ComboboxField } from './ComboboxField';
@@ -11,15 +13,12 @@ interface FieldRowProps {
 
 function FieldRow({ label, children }: FieldRowProps) {
     return (
-        <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">{label}</label>
+        <div className="flex flex-col gap-1.5">
+            <label className={labelClass}>{label}</label>
             {children}
         </div>
     );
 }
-
-const inputCls =
-    'w-full px-2.5 py-1.5 text-sm border border-gray-200 rounded-md outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400';
 
 export function BulkEditPanel() {
     const { selectedIds, bulkEditOpen, setBulkEditOpen, batchUpdateMeta } = useFrameStore();
@@ -90,71 +89,62 @@ export function BulkEditPanel() {
 
     return (
         <>
-            <div className="fixed inset-0 z-30 bg-black/20" onClick={handleClose} />
+            <div className="fixed inset-0 z-30 bg-black/40" onClick={handleClose} />
             <aside
-                className={`fixed right-4 top-4 bottom-4 w-80 bg-white rounded-xl border border-gray-200 shadow-2xl flex flex-col z-40 overflow-hidden ${closing ? 'animate-slide-out' : 'animate-slide-in'}`}
+                className={`fixed right-4 top-4 bottom-4 w-80 bg-film-surface rounded-xl border border-film-border shadow-2xl flex flex-col z-40 overflow-hidden ${closing ? 'animate-slide-out' : 'animate-slide-in'}`}
                 onAnimationEnd={handleAnimationEnd}
             >
-                <div className="px-4 py-3 border-b border-gray-100 flex items-start justify-between gap-2 shrink-0">
+                <div className="px-4 py-3 border-b border-film-border flex items-start justify-between gap-2 shrink-0">
                     <div className="min-w-0">
-                        <h2 className="text-sm font-semibold text-gray-800">일괄 편집</h2>
-                        <p className="text-xs text-gray-400 mt-0.5">{selectedIds.size}개 선택됨</p>
+                        <h2 className="text-film-text font-semibold text-sm uppercase tracking-wider">
+                            일괄 편집
+                        </h2>
+                        <p className="text-xs text-film-muted mt-0.5">
+                            {selectedIds.size}개 선택됨
+                        </p>
                     </div>
                     <button
                         onClick={handleClose}
-                        className="shrink-0 p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600"
+                        aria-label="닫기"
+                        className="shrink-0 text-film-muted hover:text-film-text transition-colors"
                     >
-                        <svg
-                            className="w-4 h-4"
-                            viewBox="0 0 16 16"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                        >
-                            <path d="M3 3l10 10M13 3L3 13" />
-                        </svg>
+                        <X size={18} />
                     </button>
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-film-muted">
                         값을 입력한 필드만 선택된 프레임에 일괄 적용됩니다.
                     </p>
 
-                    <FieldRow label="제조사 (Make)">
-                        <input
-                            type="text"
-                            value={make}
-                            placeholder="변경하지 않음"
-                            maxLength={64}
-                            className={inputCls}
-                            onChange={(e) => setMake(e.target.value)}
-                        />
-                    </FieldRow>
+                    <Input
+                        label="제조사 (Make)"
+                        type="text"
+                        value={make}
+                        placeholder="변경하지 않음"
+                        maxLength={64}
+                        onChange={(e) => setMake(e.target.value)}
+                    />
 
-                    <FieldRow label="카메라 모델">
-                        <input
-                            type="text"
-                            value={model}
-                            placeholder="변경하지 않음"
-                            maxLength={64}
-                            className={inputCls}
-                            onChange={(e) => setModel(e.target.value)}
-                        />
-                    </FieldRow>
+                    <Input
+                        label="카메라 모델"
+                        type="text"
+                        value={model}
+                        placeholder="변경하지 않음"
+                        maxLength={64}
+                        onChange={(e) => setModel(e.target.value)}
+                    />
 
-                    <FieldRow label="렌즈">
-                        <input
-                            type="text"
-                            value={lensModel}
-                            placeholder="변경하지 않음"
-                            maxLength={64}
-                            className={inputCls}
-                            onChange={(e) => setLensModel(e.target.value)}
-                        />
-                    </FieldRow>
+                    <Input
+                        label="렌즈"
+                        type="text"
+                        value={lensModel}
+                        placeholder="변경하지 않음"
+                        maxLength={64}
+                        onChange={(e) => setLensModel(e.target.value)}
+                    />
 
-                    <FieldRow label="조리개 (f/)">
+                    <FieldRow label="조리개">
                         <ComboboxField
                             value={fNumber}
                             options={APERTURE_PRESETS}
@@ -186,19 +176,16 @@ export function BulkEditPanel() {
                             value={userComment}
                             placeholder="변경하지 않음"
                             rows={3}
-                            className="w-full px-2.5 py-1.5 text-sm border border-gray-200 rounded-md outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 resize-none"
+                            className={`${fieldClass} w-full resize-none`}
                             onChange={(e) => setUserComment(e.target.value)}
                         />
                     </FieldRow>
                 </div>
 
-                <div className="px-4 py-3 border-t border-gray-100 shrink-0">
-                    <button
-                        onClick={handleApply}
-                        className="w-full px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors"
-                    >
+                <div className="px-4 py-3 border-t border-film-border shrink-0">
+                    <Button variant="primary" fullWidth onClick={handleApply}>
                         일괄 적용
-                    </button>
+                    </Button>
                 </div>
             </aside>
         </>

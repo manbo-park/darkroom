@@ -48,7 +48,7 @@ src/
 │   ├── MasterDataScreen.tsx # '/master' 필름/카메라/렌즈 기본 데이터
 │   └── SettingsScreen.tsx   # '/settings' 앱 설정
 ├── components/
-│   ├── ui/              # 재사용 UI 프리미티브 (Button, Input, Modal, ConfirmModal, CopyToast, Select, Switch, PageLayout)
+│   ├── ui/              # filo 전용 UI (CopyToast, PageLayout) — 공용 프리미티브는 @darkroom/ui
 │   └── roll/            # 도메인 컴포넌트 (RollCard, FrameItem)
 ├── hooks/               # 재사용 커스텀 훅 (useClipboardToast)
 ├── store/               # Zustand 스토어
@@ -57,7 +57,6 @@ src/
 │   └── settingsStore.ts     # 앱 설정 (localStorage, 'filo-settings')
 ├── lib/                 # 순수 유틸리티
 │   ├── idb.ts               # Zustand용 IndexedDB StateStorage 어댑터
-│   ├── scrollLock.ts        # 참조 카운트 기반 body 스크롤 잠금
 │   └── exifPayload.ts       # EXIF 페이로드 빌드·gzip 압축
 └── types/index.ts       # 전역 TypeScript 타입 정의
 ```
@@ -88,8 +87,8 @@ src/
   - `any`는 경고, `console`은 `warn`/`error`만 허용
   - React Hooks 규칙 적용
 - **TypeScript strict 모드.** `any` 사용을 지양하고 `src/types/index.ts`의 타입을 재사용합니다.
-- **UI 컴포넌트**는 `components/ui/`의 프리미티브(Button, Input, Modal, Select, Switch, PageLayout)를 우선 재사용합니다.
-- **스타일링**은 TailwindCSS 유틸리티 클래스로 작성합니다.
+- **UI 컴포넌트**는 `@darkroom/ui`의 공용 프리미티브(Button, Input, Select, Switch, Modal, ConfirmModal, Toast)와 `components/ui/`의 PageLayout을 우선 재사용합니다. body 스크롤 잠금은 `@darkroom/ui`의 `lockBodyScroll`/`unlockBodyScroll`을 씁니다(참조 카운트가 공유되어야 하므로 직접 `overflow`를 건드리지 않음).
+- **스타일링**은 TailwindCSS 유틸리티 클래스로 작성합니다. 색·폰트 토큰(`film-*`)은 공유 preset `@darkroom/ui/tailwind`에 있으며, 스타일 규칙은 루트 [AGENTS.md](../../AGENTS.md#디자인-시스템)의 디자인 시스템을 따릅니다. 토큰 변경은 fixif에도 반영되므로 preset에서만 수정합니다.
 
 ## PWA 주의사항
 

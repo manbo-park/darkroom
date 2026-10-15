@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { Modal } from '@/components/ui/Modal';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import { Modal, Button, Input } from '@darkroom/ui';
 import type { ApertureStop, Camera, Film, Lens } from '@/types';
 
 export type MasterType = 'films' | 'cameras' | 'lenses';

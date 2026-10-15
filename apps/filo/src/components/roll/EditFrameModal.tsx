@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { MapPin } from 'lucide-react';
-import { Modal } from '@/components/ui/Modal';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
+import { Modal, Button, Input, Select } from '@darkroom/ui';
 import { CopyToast } from '@/components/ui/CopyToast';
 import { useClipboardToast } from '@/hooks/useClipboardToast';
 import { useRollStore } from '@/store/rollStore';

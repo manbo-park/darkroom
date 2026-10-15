@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+import { ChevronLeft, ChevronRight, LoaderCircle, RotateCcw, RotateCw, X } from 'lucide-react';
 import type { FrameItem } from '../types/frame';
+import { Button } from '@darkroom/ui';
 import { useFrameStore } from '../store/useFrameStore';
 
 interface ImagePreviewModalProps {
@@ -90,25 +92,18 @@ export function ImagePreviewModal({
 
     return (
         <div
-            className="fixed inset-0 z-50 bg-black/80 flex flex-col items-center pt-14 pb-4"
+            className="fixed inset-0 z-50 bg-film-bg/95 flex flex-col items-center pt-14 pb-4"
             onClick={onClose}
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
         >
             {/* 닫기 버튼 */}
             <button
-                className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white z-10"
+                className="absolute top-4 right-4 p-2 rounded-full bg-film-surface/80 border border-film-border text-film-muted hover:text-film-text transition-colors z-10"
                 onClick={onClose}
+                aria-label="닫기"
             >
-                <svg
-                    className="w-5 h-5"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                >
-                    <path d="M3 3l10 10M13 3L3 13" />
-                </svg>
+                <X size={20} />
             </button>
 
             {/* 이미지 + 화살표 영역 */}
@@ -116,79 +111,43 @@ export function ImagePreviewModal({
                 {/* 이전 화살표 */}
                 {hasPrev && (
                     <button
-                        className={`absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/25 text-white transition-opacity duration-200 z-10 ${hovering ? 'opacity-100' : 'opacity-0'}`}
+                        className={`absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-film-surface/80 border border-film-border text-film-muted hover:text-film-text transition-[opacity,color] duration-200 z-10 ${hovering ? 'opacity-100' : 'opacity-0'}`}
                         onClick={(e) => {
                             e.stopPropagation();
                             setSkipTransition(true);
                             setLoaded(false);
                             onNavigate(currentIndex - 1);
                         }}
+                        aria-label="이전 이미지"
                     >
-                        <svg
-                            className="w-6 h-6"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="M15 18l-6-6 6-6" />
-                        </svg>
+                        <ChevronLeft size={24} />
                     </button>
                 )}
 
                 {/* 다음 화살표 */}
                 {hasNext && (
                     <button
-                        className={`absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/25 text-white transition-opacity duration-200 z-10 ${hovering ? 'opacity-100' : 'opacity-0'}`}
+                        className={`absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-film-surface/80 border border-film-border text-film-muted hover:text-film-text transition-[opacity,color] duration-200 z-10 ${hovering ? 'opacity-100' : 'opacity-0'}`}
                         onClick={(e) => {
                             e.stopPropagation();
                             setSkipTransition(true);
                             setLoaded(false);
                             onNavigate(currentIndex + 1);
                         }}
+                        aria-label="다음 이미지"
                     >
-                        <svg
-                            className="w-6 h-6"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="M9 18l6-6-6-6" />
-                        </svg>
+                        <ChevronRight size={24} />
                     </button>
                 )}
 
                 {/* 스피너 */}
                 {!loaded && (
-                    <svg
-                        className="w-10 h-10 text-white/50 animate-spin absolute"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                    >
-                        <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                        />
-                        <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                        />
-                    </svg>
+                    <LoaderCircle size={40} className="text-film-muted animate-spin absolute" />
                 )}
 
                 {/* 이미지 */}
                 <img
-                    src={url}
+                    src={url || undefined}
                     alt={frame.file.name}
                     className={`object-contain rounded shadow-2xl ${skipTransition ? '' : 'transition-[opacity,transform] duration-300'} ${loaded ? 'opacity-100' : 'opacity-0 min-h-[30vh]'}`}
                     style={{
@@ -210,49 +169,29 @@ export function ImagePreviewModal({
                 className="flex-shrink-0 mt-3 flex flex-col items-center gap-3"
                 onClick={(e) => e.stopPropagation()}
             >
-                <p className="text-sm text-white/60 select-none">{frame.file.name}</p>
+                <p className="text-sm text-film-muted select-none">{frame.file.name}</p>
                 <div className="flex gap-2">
-                    <button
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs transition-colors"
+                    <Button
+                        size="sm"
+                        className="flex items-center gap-1.5"
                         onClick={() => rotate(-90)}
                         title="왼쪽으로 90° 회전"
                     >
-                        <svg
-                            className="w-3.5 h-3.5"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                            <path d="M3 3v5h5" />
-                        </svg>
+                        <RotateCcw size={14} />
                         왼쪽으로 90° 회전(Q)
-                    </button>
-                    <button
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs transition-colors"
+                    </Button>
+                    <Button
+                        size="sm"
+                        className="flex items-center gap-1.5"
                         onClick={() => rotate(90)}
                         title="오른쪽으로 90° 회전"
                     >
-                        <svg
-                            className="w-3.5 h-3.5"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="M21 12a9 9 0 1 1-9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                            <path d="M21 3v5h-5" />
-                        </svg>
+                        <RotateCw size={14} />
                         오른쪽으로 90° 회전(E)
-                    </button>
+                    </Button>
                     {normalizedRotation !== 0 && (
-                        <button
-                            className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs transition-colors"
+                        <Button
+                            size="sm"
                             onClick={() => {
                                 setDisplayRotation(0);
                                 updateFrameRotation(frame.id, 0);
@@ -260,7 +199,7 @@ export function ImagePreviewModal({
                             title="회전 초기화"
                         >
                             초기화(R)
-                        </button>
+                        </Button>
                     )}
                 </div>
             </div>

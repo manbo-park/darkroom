@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { PageLayout } from '@/components/ui/PageLayout';
-import { Switch } from '@/components/ui/Switch';
+import { Switch } from '@darkroom/ui';
 import { useSettingsStore } from '@/store/settingsStore';
 
 export function SettingsScreen() {

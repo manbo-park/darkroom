@@ -12,9 +12,10 @@
 
 ## 기술 스택
 
-- **프레임워크**: React 18 + TypeScript
+- **프레임워크**: React 19 + TypeScript
 - **번들러**: Vite 6
-- **스타일**: Tailwind CSS v3
+- **스타일**: Tailwind CSS v3 + 공유 preset `@darkroom/ui/tailwind` (filo와 같은 다크 테마)
+- **UI 컴포넌트**: `@darkroom/ui` (Button, Input, Switch, Modal, Toast 등), 아이콘 `lucide-react`
 - **상태 관리**: Zustand (자체 히스토리 스택으로 Undo/Redo 구현, 최근 50개 상태 유지)
 - **EXIF 읽기**: `exifr`
 - **EXIF 쓰기**: `piexifjs`
@@ -45,14 +46,12 @@ src/
 │   ├── FrameTable.tsx          # 프레임 리스트 테이블 (행 = 프레임)
 │   ├── FrameToolbar.tsx        # 상단 툴바 (Undo/Redo, 일괄 편집 등)
 │   ├── SidePanel.tsx           # 단일 프레임 편집 사이드 패널
-│   ├── BulkEditBar.tsx         # 다중 선택 시 액션 바
 │   ├── BulkEditPanel.tsx       # 일괄 편집 패널
 │   ├── ClipboardImportModal.tsx# filo 데이터 매칭 미리보기 모달
 │   ├── ComboboxField.tsx       # 프리셋 + 자유입력 콤보박스
 │   ├── ImagePreviewModal.tsx   # 이미지 미리보기/회전 모달
-│   ├── ExportBar.tsx           # 내보내기 바
 │   ├── SettingsPanel.tsx       # 설정 패널
-│   └── Toast.tsx               # 토스트 알림
+│   └── Toast.tsx               # 토스트 (useToastStore 구독 → @darkroom/ui Toast 표시)
 ├── lib/                    # 도메인 로직 (UI 비의존)
 │   ├── exif.ts                 # EXIF 읽기
 │   ├── exifWriter.ts           # EXIF 쓰기 (piexifjs 래핑)
@@ -123,6 +122,8 @@ src/
 - Prettier 설정: `semi: true`, `singleQuote: true`, `tabWidth: 4`, `trailingComma: all`, `printWidth: 100`.
 - 커밋 메시지는 **Conventional Commits** 규칙을 따르고 한국어로 작성합니다.
 - 도메인 로직은 `lib/`에 UI 비의존으로 유지하고, 컴포넌트는 표현에 집중합니다.
+- UI는 `@darkroom/ui` 공용 컴포넌트와 `film-*` 토큰을 사용합니다. 스타일 규칙은 루트 [AGENTS.md](../../AGENTS.md#디자인-시스템)의 디자인 시스템을 따릅니다.
+- 모달은 `Modal layout="dialog"`를 씁니다 (전체 화면 뷰어인 `ImagePreviewModal`만 예외). 네이티브 컨트롤이 다크로 보이도록 `index.css`에 `color-scheme: dark`를 둡니다.
 
 ## 작업 시 주의사항
 

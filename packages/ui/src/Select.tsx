@@ -1,4 +1,5 @@
-import type { SelectHTMLAttributes } from 'react';
+import { useId, type SelectHTMLAttributes } from 'react';
+import { fieldClass, labelClass } from './field';
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
     label?: string;
@@ -16,15 +17,13 @@ export function Select({
     id,
     ...props
 }: SelectProps) {
-    const selectId = id ?? label?.toLowerCase().replace(/\s+/g, '-');
+    const autoId = useId();
+    const selectId = id ?? autoId;
 
     return (
         <div className="flex flex-col gap-1.5">
             {label && (
-                <label
-                    htmlFor={selectId}
-                    className="text-xs font-mono text-film-muted uppercase tracking-wider"
-                >
+                <label htmlFor={selectId} className={labelClass}>
                     {label}
                 </label>
             )}
@@ -32,9 +31,7 @@ export function Select({
                 id={selectId}
                 {...props}
                 className={[
-                    'bg-film-bg border border-film-border rounded-lg px-3 py-2.5',
-                    'text-film-text font-mono text-sm',
-                    'focus:outline-none focus:border-film-accent transition-colors',
+                    fieldClass,
                     'appearance-none',
                     error ? 'border-film-danger' : '',
                     className,
@@ -42,11 +39,7 @@ export function Select({
                     .filter(Boolean)
                     .join(' ')}
             >
-                {placeholder && (
-                    <option value="">
-                        {placeholder}
-                    </option>
-                )}
+                {placeholder && <option value="">{placeholder}</option>}
                 {options.map((opt) => (
                     <option key={opt.value} value={opt.value}>
                         {opt.label}

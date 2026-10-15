@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 날짜 선택기·체크박스 등 네이티브 컨트롤을 다크 테마로 */
+:root {
+    color-scheme: dark;
+}
+
 @keyframes slide-in-right {
     from { transform: translateX(110%); }
     to   { transform: translateX(0); }
@@ -16,13 +21,4 @@
 }
 .animate-slide-out {
     animation: slide-out-right 0.18s cubic-bezier(0.55, 0, 0.1, 1) forwards;
-}
-
-@keyframes toast-in {
-    from { opacity: 0; transform: translate(-50%, 8px); }
-    to   { opacity: 1; transform: translate(-50%, 0); }
-}
-
-.animate-toast-in {
-    animation: toast-in 0.15s ease-out;
 }
