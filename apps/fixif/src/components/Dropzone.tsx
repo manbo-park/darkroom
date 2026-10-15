@@ -82,26 +82,24 @@ export function Dropzone() {
                 {...getRootProps()}
                 className={`border-2 border-dashed rounded-xl px-10 text-center cursor-pointer transition-colors select-none flex flex-col items-center justify-center min-h-32 ${
                     isDragActive
-                        ? 'border-blue-400 bg-blue-50'
-                        : 'border-gray-300 bg-white hover:border-gray-400 hover:bg-gray-50'
+                        ? 'border-film-accent bg-film-accent/10'
+                        : 'border-film-border bg-film-surface hover:border-film-muted'
                 }`}
             >
                 <input {...getInputProps()} />
                 {isProcessing ? (
-                    <p className="text-gray-400 text-sm">EXIF 읽는 중...</p>
+                    <p className="text-film-muted text-sm">EXIF 읽는 중...</p>
                 ) : isDragActive ? (
-                    <p className="text-blue-500 font-medium">놓아서 불러오기</p>
+                    <p className="text-film-accent">놓아서 불러오기</p>
                 ) : (
                     <div className="space-y-1">
-                        <p className="text-gray-600 font-medium">
-                            파일을 드래그하거나 클릭하여 불러오기
-                        </p>
-                        <p className="text-gray-400 text-sm">.jpg · .jpeg 만 지원</p>
+                        <p className="text-film-text">파일을 드래그하거나 클릭하여 불러오기</p>
+                        <p className="text-film-muted text-sm">.jpg · .jpeg 만 지원</p>
                     </div>
                 )}
             </div>
             {rejectedNames.length > 0 && (
-                <p className="mt-2 text-sm text-red-500">
+                <p className="mt-2 text-sm text-film-danger">
                     지원하지 않는 파일: {rejectedNames.join(', ')}
                 </p>
             )}

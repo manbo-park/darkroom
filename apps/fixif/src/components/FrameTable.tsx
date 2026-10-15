@@ -87,9 +87,9 @@ function SortableTh({ label, sortKey, current, dir, onSort, className = '' }: So
             onClick={() => onSort(sortKey)}
         >
             <span className="inline-flex items-center gap-1">
-                <span className={active ? 'text-blue-600' : ''}>{label}</span>
+                <span className={active ? 'text-film-accent' : ''}>{label}</span>
                 <span
-                    className={`text-[10px] transition-opacity ${active ? 'opacity-100 text-blue-600' : 'opacity-0 group-hover:opacity-40'}`}
+                    className={`text-[10px] transition-opacity ${active ? 'opacity-100 text-film-accent' : 'opacity-0 group-hover:opacity-40'}`}
                 >
                     {active && dir === 'asc' ? '↑' : active && dir === 'desc' ? '↓' : '↕'}
                 </span>
@@ -138,14 +138,14 @@ function FrameRow({ frame, onPreview, dragEnabled }: FrameRowProps) {
         <tr
             ref={setNodeRef}
             style={style}
-            className={`border-b border-gray-100 cursor-pointer select-none transition-colors ${
+            className={`border-b border-film-border cursor-pointer select-none transition-colors ${
                 isDragging
-                    ? 'opacity-50 bg-blue-50'
+                    ? 'opacity-50 bg-film-accent/10'
                     : isActive
-                      ? 'bg-indigo-50 hover:bg-indigo-100'
+                      ? 'bg-film-accent/20'
                       : isSelected
-                        ? 'bg-blue-50 hover:bg-blue-100'
-                        : 'hover:bg-gray-50'
+                        ? 'bg-film-accent/10 hover:bg-film-accent/15'
+                        : 'hover:bg-film-border/50'
             }`}
             onClick={handleRowClick}
         >
@@ -154,7 +154,7 @@ function FrameRow({ frame, onPreview, dragEnabled }: FrameRowProps) {
                     <button
                         {...attributes}
                         {...listeners}
-                        className="cursor-grab active:cursor-grabbing p-0.5 text-gray-300 hover:text-gray-500 transition-colors"
+                        className="cursor-grab active:cursor-grabbing p-0.5 text-film-muted hover:text-film-text transition-colors"
                         tabIndex={-1}
                     >
                         <GripVertical size={14} />
@@ -166,7 +166,7 @@ function FrameRow({ frame, onPreview, dragEnabled }: FrameRowProps) {
                     type="checkbox"
                     checked={isSelected}
                     onChange={handleCheckbox}
-                    className="cursor-pointer accent-blue-500"
+                    className="cursor-pointer accent-film-accent"
                 />
             </td>
             <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
@@ -184,43 +184,43 @@ function FrameRow({ frame, onPreview, dragEnabled }: FrameRowProps) {
                         />
                     </div>
                 ) : (
-                    <div className="w-12 h-12 bg-gray-100 rounded flex items-center justify-center text-gray-300 text-xs">
+                    <div className="w-12 h-12 bg-film-border rounded flex items-center justify-center text-film-muted text-xs">
                         없음
                     </div>
                 )}
             </td>
-            <td className="px-3 py-2 text-center text-sm text-gray-600 tabular-nums">
+            <td className="px-3 py-2 text-center text-sm text-film-text tabular-nums">
                 {frame.frameNumber ?? '—'}
             </td>
             <td
-                className="px-3 py-2 text-sm text-gray-700 max-w-[180px] truncate"
+                className="px-3 py-2 text-sm text-film-text max-w-[180px] truncate"
                 title={frame.file.name}
             >
                 {frame.file.name}
             </td>
-            <td className="px-3 py-2 text-sm text-gray-600 whitespace-nowrap tabular-nums">
+            <td className="px-3 py-2 text-sm text-film-text whitespace-nowrap tabular-nums">
                 {formatDate(meta.dateTimeOriginal)}
             </td>
-            <td className="px-3 py-2 text-sm text-gray-700">
+            <td className="px-3 py-2 text-sm text-film-text">
                 {[meta.make, meta.model].filter(Boolean).join(' ') || '—'}
             </td>
             <td
-                className="px-3 py-2 text-sm text-gray-700 max-w-[140px] truncate"
+                className="px-3 py-2 text-sm text-film-text max-w-[140px] truncate"
                 title={meta.lensModel ?? ''}
             >
                 {meta.lensModel ?? '—'}
             </td>
-            <td className="px-3 py-2 text-sm text-gray-600 text-center tabular-nums">
+            <td className="px-3 py-2 text-sm text-film-text text-center tabular-nums">
                 {meta.fNumber != null ? `f/${meta.fNumber}` : '—'}
             </td>
-            <td className="px-3 py-2 text-sm text-gray-600 text-center tabular-nums">
+            <td className="px-3 py-2 text-sm text-film-text text-center tabular-nums">
                 {meta.exposureTime ?? '—'}
             </td>
-            <td className="px-3 py-2 text-sm text-gray-600 text-center tabular-nums">
+            <td className="px-3 py-2 text-sm text-film-text text-center tabular-nums">
                 {meta.iso ?? '—'}
             </td>
             <td
-                className="px-3 py-2 text-sm text-gray-400 max-w-[120px] truncate"
+                className="px-3 py-2 text-sm text-film-text max-w-[120px] truncate"
                 title={meta.userComment ?? ''}
             >
                 {meta.userComment ?? '—'}
@@ -281,7 +281,7 @@ export function FrameTable() {
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <div className="overflow-x-auto">
                 <table className="min-w-full text-left">
-                    <thead className="bg-gray-50 border-b border-gray-200 text-xs text-gray-500 uppercase tracking-wide">
+                    <thead className="bg-film-bg border-b border-film-border text-xs text-film-muted uppercase tracking-wider">
                         <tr>
                             {isDragEnabled && <th className="w-6" />}
                             <th className="px-3 py-2">
@@ -292,7 +292,7 @@ export function FrameTable() {
                                         if (el) el.indeterminate = someSelected;
                                     }}
                                     onChange={() => (allSelected ? clearSelection() : selectAll())}
-                                    className="cursor-pointer accent-blue-500"
+                                    className="cursor-pointer accent-film-accent"
                                 />
                             </th>
                             <th className="px-3 py-2">썸네일</th>

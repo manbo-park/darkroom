@@ -57,17 +57,17 @@ export function ComboboxField({
     return (
         <div ref={containerRef} className={`relative ${className}`}>
             <div
-                className={`flex items-center border rounded-md overflow-hidden focus-within:ring-1 ${
+                className={`flex items-center bg-film-bg border rounded-lg overflow-hidden transition-colors ${
                     error
-                        ? 'border-red-400 focus-within:ring-red-400'
-                        : 'border-gray-200 focus-within:ring-blue-400 focus-within:border-blue-400'
+                        ? 'border-film-danger'
+                        : 'border-film-border focus-within:border-film-accent'
                 }`}
             >
                 <input
                     type="text"
                     value={inputVal}
                     placeholder={placeholder}
-                    className="flex-1 px-2.5 py-1.5 text-sm outline-none bg-transparent min-w-0"
+                    className="flex-1 px-3 py-2.5 font-mono text-sm text-film-text placeholder-film-muted outline-none bg-transparent min-w-0"
                     onChange={(e) => {
                         setInputVal(e.target.value);
                         setOpen(true);
@@ -89,7 +89,7 @@ export function ComboboxField({
                 <button
                     type="button"
                     tabIndex={-1}
-                    className="shrink-0 px-2 py-1.5 text-gray-400 hover:text-gray-600"
+                    className="shrink-0 px-3 text-film-muted hover:text-film-text transition-colors"
                     onPointerDown={(e) => {
                         e.preventDefault();
                         setOpen((o) => !o);
@@ -99,14 +99,14 @@ export function ComboboxField({
                 </button>
             </div>
             {open && filtered.length > 0 && (
-                <ul className="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-48 overflow-y-auto text-sm">
+                <ul className="absolute z-50 mt-1 w-full bg-film-surface border border-film-border rounded-lg shadow-lg max-h-48 overflow-y-auto font-mono text-sm">
                     {filtered.map((opt) => (
                         <li
                             key={opt}
-                            className={`px-3 py-1.5 cursor-pointer hover:bg-blue-50 ${
+                            className={`px-3 py-1.5 cursor-pointer hover:bg-film-border ${
                                 opt === value
-                                    ? 'text-blue-600 font-medium bg-blue-50/50'
-                                    : 'text-gray-700'
+                                    ? 'text-film-accent bg-film-accent/10'
+                                    : 'text-film-text'
                             }`}
                             onPointerDown={(e) => {
                                 e.preventDefault();
