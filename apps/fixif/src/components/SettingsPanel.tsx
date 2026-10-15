@@ -1,20 +1,6 @@
 import { useState } from 'react';
+import { Input, Switch } from '@darkroom/ui';
 import { useSettingsStore } from '../store/useSettingsStore';
-
-function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
-    return (
-        <button
-            role="switch"
-            aria-checked={checked}
-            onClick={() => onChange(!checked)}
-            className={`relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors focus:outline-none ${checked ? 'bg-blue-600' : 'bg-gray-200'}`}
-        >
-            <span
-                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${checked ? 'translate-x-5' : 'translate-x-0'}`}
-            />
-        </button>
-    );
-}
 
 export function SettingsPanel() {
     const settingsOpen = useSettingsStore((s) => s.settingsOpen);
@@ -91,42 +77,32 @@ export function SettingsPanel() {
                             내보내기
                         </p>
                         <div className="space-y-3">
-                            <label className="block text-sm font-medium text-gray-600">
-                                파일명 접미사
-                            </label>
-                            <input
+                            <Input
+                                label="파일명 접미사"
                                 type="text"
                                 value={suffixInput}
                                 onChange={(e) => handleSuffixChange(e.target.value)}
                                 placeholder="_fixif"
-                                className={`w-full px-2.5 py-1.5 text-sm font-mono border rounded-md outline-none focus:ring-1 ${suffixError ? 'border-red-400 focus:ring-red-400' : 'border-gray-200 focus:ring-blue-400 focus:border-blue-400'}`}
+                                error={suffixError}
                             />
-                            {suffixError ? (
-                                <p className="text-xs text-red-500">{suffixError}</p>
-                            ) : (
+                            {!suffixError && (
                                 <p className="text-xs text-gray-400">
                                     예:{' '}
                                     <span className="font-mono text-gray-500">{previewName}</span>
                                 </p>
                             )}
-                            <div className="flex items-center justify-between gap-3">
-                                <div className="min-w-0">
-                                    <p className="text-sm font-medium text-gray-600">위치 정보</p>
-                                    <p className="text-xs text-gray-400 mt-0.5">
-                                        위치 정보를 내보내기에 포함
-                                    </p>
-                                </div>
-                                <Toggle checked={includeGps} onChange={setIncludeGps} />
-                            </div>
-                            <div className="flex items-center justify-between gap-3">
-                                <div className="min-w-0">
-                                    <p className="text-sm font-medium text-gray-600">메모</p>
-                                    <p className="text-xs text-gray-400 mt-0.5">
-                                        메모를 내보내기에 포함
-                                    </p>
-                                </div>
-                                <Toggle checked={includeMemo} onChange={setIncludeMemo} />
-                            </div>
+                            <Switch
+                                checked={includeGps}
+                                onChange={setIncludeGps}
+                                label="위치 정보"
+                                description="위치 정보를 내보내기에 포함"
+                            />
+                            <Switch
+                                checked={includeMemo}
+                                onChange={setIncludeMemo}
+                                label="메모"
+                                description="메모를 내보내기에 포함"
+                            />
                         </div>
                     </div>
                 </div>

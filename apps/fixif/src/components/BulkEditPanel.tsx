@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Button, Input, fieldClass, labelClass } from '@darkroom/ui';
 import { useFrameStore } from '../store/useFrameStore';
 import type { FrameMeta } from '../types/frame';
 import { ComboboxField } from './ComboboxField';
@@ -11,15 +12,12 @@ interface FieldRowProps {
 
 function FieldRow({ label, children }: FieldRowProps) {
     return (
-        <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">{label}</label>
+        <div className="flex flex-col gap-1.5">
+            <label className={labelClass}>{label}</label>
             {children}
         </div>
     );
 }
-
-const inputCls =
-    'w-full px-2.5 py-1.5 text-sm border border-gray-200 rounded-md outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400';
 
 export function BulkEditPanel() {
     const { selectedIds, bulkEditOpen, setBulkEditOpen, batchUpdateMeta } = useFrameStore();
@@ -121,40 +119,34 @@ export function BulkEditPanel() {
                         값을 입력한 필드만 선택된 프레임에 일괄 적용됩니다.
                     </p>
 
-                    <FieldRow label="제조사 (Make)">
-                        <input
-                            type="text"
-                            value={make}
-                            placeholder="변경하지 않음"
-                            maxLength={64}
-                            className={inputCls}
-                            onChange={(e) => setMake(e.target.value)}
-                        />
-                    </FieldRow>
+                    <Input
+                        label="제조사 (Make)"
+                        type="text"
+                        value={make}
+                        placeholder="변경하지 않음"
+                        maxLength={64}
+                        onChange={(e) => setMake(e.target.value)}
+                    />
 
-                    <FieldRow label="카메라 모델">
-                        <input
-                            type="text"
-                            value={model}
-                            placeholder="변경하지 않음"
-                            maxLength={64}
-                            className={inputCls}
-                            onChange={(e) => setModel(e.target.value)}
-                        />
-                    </FieldRow>
+                    <Input
+                        label="카메라 모델"
+                        type="text"
+                        value={model}
+                        placeholder="변경하지 않음"
+                        maxLength={64}
+                        onChange={(e) => setModel(e.target.value)}
+                    />
 
-                    <FieldRow label="렌즈">
-                        <input
-                            type="text"
-                            value={lensModel}
-                            placeholder="변경하지 않음"
-                            maxLength={64}
-                            className={inputCls}
-                            onChange={(e) => setLensModel(e.target.value)}
-                        />
-                    </FieldRow>
+                    <Input
+                        label="렌즈"
+                        type="text"
+                        value={lensModel}
+                        placeholder="변경하지 않음"
+                        maxLength={64}
+                        onChange={(e) => setLensModel(e.target.value)}
+                    />
 
-                    <FieldRow label="조리개 (f/)">
+                    <FieldRow label="조리개">
                         <ComboboxField
                             value={fNumber}
                             options={APERTURE_PRESETS}
@@ -186,19 +178,16 @@ export function BulkEditPanel() {
                             value={userComment}
                             placeholder="변경하지 않음"
                             rows={3}
-                            className="w-full px-2.5 py-1.5 text-sm border border-gray-200 rounded-md outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 resize-none"
+                            className={`${fieldClass} w-full resize-none`}
                             onChange={(e) => setUserComment(e.target.value)}
                         />
                     </FieldRow>
                 </div>
 
                 <div className="px-4 py-3 border-t border-gray-100 shrink-0">
-                    <button
-                        onClick={handleApply}
-                        className="w-full px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors"
-                    >
+                    <Button variant="primary" fullWidth onClick={handleApply}>
                         일괄 적용
-                    </button>
+                    </Button>
                 </div>
             </aside>
         </>

@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { Button } from '@darkroom/ui';
 import { useFrameStore } from '../store/useFrameStore';
 import { useToastStore } from '../store/useToastStore';
 import { useSettingsStore } from '../store/useSettingsStore';
@@ -88,7 +89,15 @@ export function FrameToolbar() {
                     title="실행 취소 (Ctrl+Z)"
                     className="p-1.5 rounded text-gray-400 hover:text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 >
-                    <svg className="w-4 h-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                        className="w-4 h-4"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
                         <path d="M3 7h10a4 4 0 0 1 0 8H7" />
                         <path d="M3 7l3-3M3 7l3 3" />
                     </svg>
@@ -99,7 +108,15 @@ export function FrameToolbar() {
                     title="다시 실행 (Ctrl+Shift+Z)"
                     className="p-1.5 rounded text-gray-400 hover:text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 >
-                    <svg className="w-4 h-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                        className="w-4 h-4"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
                         <path d="M17 7H7a4 4 0 0 0 0 8h6" />
                         <path d="M17 7l-3-3M17 7l-3 3" />
                     </svg>
@@ -109,24 +126,27 @@ export function FrameToolbar() {
             <div className="ml-auto flex items-center gap-2">
                 {selectedIds.size > 0 && (
                     <>
-                        <button
+                        <Button
+                            size="sm"
+                            className="flex items-center gap-1.5"
                             onClick={() => {
                                 setActiveFrameId(null);
                                 setBulkEditOpen(true);
                             }}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-blue-600 hover:bg-blue-50 active:bg-blue-100 transition-colors"
                         >
                             <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                             </svg>
                             일괄 편집
-                        </button>
-                        <button
+                        </Button>
+                        <Button
+                            variant="danger"
+                            size="sm"
+                            className="flex items-center gap-1.5"
                             onClick={() => {
                                 removeFrames([...selectedIds]);
                                 clearSelection();
                             }}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors"
                         >
                             <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
                                 <path
@@ -136,16 +156,13 @@ export function FrameToolbar() {
                                 />
                             </svg>
                             제거
-                        </button>
+                        </Button>
                     </>
                 )}
                 {errorCount > 0 && (
                     <span className="text-xs text-red-500 font-medium">오류 {errorCount}개</span>
                 )}
-                <button
-                    onClick={handleFiloOpen}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:bg-gray-50 active:bg-gray-100 transition-colors"
-                >
+                <Button size="sm" className="flex items-center gap-1.5" onClick={handleFiloOpen}>
                     <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
                         <path
                             fillRule="evenodd"
@@ -154,10 +171,8 @@ export function FrameToolbar() {
                         />
                     </svg>
                     filo 데이터 붙여넣기
-                </button>
-                <button
-                    onClick={handleExport}
-                    disabled={!canExport}
+                </Button>
+                <span
                     title={
                         errorCount > 0
                             ? `오류가 있는 ${errorCount}개 행을 수정 후 내보낼 수 있습니다`
@@ -165,45 +180,51 @@ export function FrameToolbar() {
                               ? `${targets.length}개 파일을 ZIP으로 내보내기`
                               : '파일 내보내기'
                     }
-                    className={[
-                        'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
-                        canExport
-                            ? 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800'
-                            : 'bg-gray-200 text-gray-400 cursor-not-allowed',
-                    ].join(' ')}
                 >
-                    {exporting ? (
-                        <>
-                            <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                                <circle
-                                    className="opacity-25"
-                                    cx="12"
-                                    cy="12"
-                                    r="10"
-                                    stroke="currentColor"
-                                    strokeWidth="4"
-                                />
-                                <path
-                                    className="opacity-75"
-                                    fill="currentColor"
-                                    d="M4 12a8 8 0 018-8v8H4z"
-                                />
-                            </svg>
-                            처리 중…
-                        </>
-                    ) : (
-                        <>
-                            <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                                <path
-                                    fillRule="evenodd"
-                                    d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
-                            새 파일로 내보내기
-                        </>
-                    )}
-                </button>
+                    <Button
+                        variant="primary"
+                        size="sm"
+                        className="flex items-center gap-1.5"
+                        onClick={handleExport}
+                        disabled={!canExport}
+                    >
+                        {exporting ? (
+                            <>
+                                <svg
+                                    className="w-4 h-4 animate-spin"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                >
+                                    <circle
+                                        className="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        strokeWidth="4"
+                                    />
+                                    <path
+                                        className="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8v8H4z"
+                                    />
+                                </svg>
+                                처리 중…
+                            </>
+                        ) : (
+                            <>
+                                <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                    <path
+                                        fillRule="evenodd"
+                                        d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z"
+                                        clipRule="evenodd"
+                                    />
+                                </svg>
+                                새 파일로 내보내기
+                            </>
+                        )}
+                    </Button>
+                </span>
             </div>
 
             {filoInputOpen && (
