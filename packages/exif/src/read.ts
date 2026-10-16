@@ -1,5 +1,5 @@
 import exifr from 'exifr';
-import type { FrameMeta } from '../types/frame';
+import type { ExifMeta } from './types';
 
 const EXIF_TAGS = [
     'DateTimeOriginal',
@@ -14,7 +14,7 @@ const EXIF_TAGS = [
     'longitude',
 ] as const;
 
-export async function readExif(file: File): Promise<FrameMeta> {
+export async function readExif(file: File): Promise<ExifMeta> {
     try {
         const data = await exifr.parse(file, { pick: [...EXIF_TAGS], gps: true });
         if (!data) return emptyMeta();
@@ -78,7 +78,7 @@ function formatShutter(val: number): string {
     return `1/${inv}`;
 }
 
-function emptyMeta(): FrameMeta {
+function emptyMeta(): ExifMeta {
     return {
         dateTimeOriginal: null,
         make: null,

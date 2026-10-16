@@ -1,6 +1,6 @@
 import JSZip from 'jszip';
-import { writeExif } from './exifWriter';
-import type { WriteExifOptions } from './exifWriter';
+import { writeExif } from '@darkroom/exif';
+import type { WriteExifOptions } from '@darkroom/exif';
 import type { FrameItem } from '../types/frame';
 
 function rotateBlob(file: File, degrees: 90 | 180 | 270): Promise<Blob> {

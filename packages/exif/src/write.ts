@@ -1,5 +1,5 @@
 import piexif from 'piexifjs';
-import type { FrameMeta } from '../types/frame';
+import type { ExifMeta } from './types';
 
 // OffsetTimeOriginal (0x9011)은 EXIF 2.31 태그로 piexifjs TAGS 목록에 없음.
 // dump() 내부가 TAGS[ifd][tag].type을 참조하므로 런타임에 직접 등록해야 함.
@@ -125,7 +125,7 @@ export interface WriteExifOptions {
     includeMemo?: boolean;
 }
 
-export async function writeExif(file: Blob, meta: FrameMeta, options: WriteExifOptions = {}): Promise<Blob> {
+export async function writeExif(file: Blob, meta: ExifMeta, options: WriteExifOptions = {}): Promise<Blob> {
     const { includeGps = true, includeMemo = true } = options;
     const binaryStr = await fileToBinaryString(file);
     let exifObj: ReturnType<typeof piexif.load>;
