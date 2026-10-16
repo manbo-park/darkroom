@@ -10,7 +10,7 @@ import { Toast } from './components/Toast';
 import { ClipboardImportModal } from './components/ClipboardImportModal';
 import { useFrameStore } from './store/useFrameStore';
 import { useSettingsStore } from './store/useSettingsStore';
-import { decodeClipboardPayload } from './lib/clipboard';
+import { decodeFiloPayload } from '@darkroom/filo-payload';
 
 function App() {
     const frames = useFrameStore((s) => s.frames);
@@ -25,7 +25,7 @@ function App() {
             const text = e.clipboardData?.getData('text');
             if (!text) return;
 
-            const payload = await decodeClipboardPayload(text);
+            const payload = await decodeFiloPayload(text);
             if (payload) setPendingImport(payload);
         };
 

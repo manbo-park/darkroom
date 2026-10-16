@@ -96,6 +96,9 @@ importers:
       '@darkroom/exif':
         specifier: workspace:*
         version: link:../../packages/exif
+      '@darkroom/filo-payload':
+        specifier: workspace:*
+        version: link:../../packages/filo-payload
       '@darkroom/ui':
         specifier: workspace:*
         version: link:../../packages/ui
