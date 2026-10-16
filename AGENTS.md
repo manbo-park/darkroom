@@ -38,6 +38,7 @@ darkroom/
 ├── packages/
 │   ├── tsconfig/      # @darkroom/tsconfig — 공유 tsconfig (base.json, node.json)
 │   ├── eslint-config/ # @darkroom/eslint-config — 공유 ESLint flat config
+│   ├── exif/          # @darkroom/exif — EXIF 읽기/쓰기 (React 비의존)
 │   └── ui/            # @darkroom/ui — 디자인 토큰(Tailwind preset)·공용 UI 컴포넌트
 ├── pnpm-workspace.yaml
 ├── turbo.json
@@ -66,6 +67,9 @@ pnpm --filter fixif build   # 특정 앱만 빌드
 - **`@darkroom/eslint-config`** — 공유 flat config(js/tseslint recommended, react-hooks, react-refresh, prettier). 각 앱 `eslint.config.mjs`가 이를 스프레드한 뒤 앱별 규칙을 덧붙입니다.
 
 - **`@darkroom/ui`** — 두 앱의 디자인 문법(filo 기준 다크 테마)의 단일 출처. 아래 [디자인 시스템](#디자인-시스템) 참조.
+- **`@darkroom/exif`** — `readExif`·`readThumbnail`(exifr), `writeExif`(piexifjs). 표준 EXIF 필드만 담는 `ExifMeta`를 주고받으며, 쓰기 시 `null` 필드는 태그를 삭제합니다. `@darkroom/ui`처럼 TS 소스를 그대로 export합니다.
+  - `write.ts`는 import 시점에 piexifjs `TAGS`에 OffsetTimeOriginal을 등록하므로 `sideEffects: false`를 선언하지 않습니다.
+  - EXIF 기록 후 이미지 픽셀 데이터는 원본과 100% 동일해야 합니다(`piexif.insert()` 사용 시 이론상 보장). 쓰기 로직 변경 시 회귀에 유의하세요.
 
 공유 패키지는 `workspace:*`로 참조합니다.
 
