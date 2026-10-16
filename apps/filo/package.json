@@ -13,6 +13,7 @@
         "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\""
     },
     "dependencies": {
+        "@darkroom/filo-payload": "workspace:*",
         "@darkroom/ui": "workspace:*",
         "idb-keyval": "^6.2.1",
         "lucide-react": "^1.8.0",

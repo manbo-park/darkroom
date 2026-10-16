@@ -1,4 +1,4 @@
-import type { FiloFrame, FiloPayload } from '../types/filo';
+import type { FiloFrame, FiloPayload } from '@darkroom/filo-payload';
 import type { FrameItem, FrameMeta } from '../types/frame';
 
 export interface FrameMatch {

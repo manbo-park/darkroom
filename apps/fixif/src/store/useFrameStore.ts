@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { FrameItem, FrameMeta } from '../types/frame';
-import type { FiloPayload } from '../types/filo';
+import type { FiloPayload } from '@darkroom/filo-payload';
 import { validateMeta } from '../lib/validation';
 
 const MAX_HISTORY = 50;

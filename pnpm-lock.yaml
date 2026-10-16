@@ -14,6 +14,9 @@ importers:
 
   apps/filo:
     dependencies:
+      '@darkroom/filo-payload':
+        specifier: workspace:*
+        version: link:../../packages/filo-payload
       '@darkroom/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -93,6 +96,9 @@ importers:
       '@darkroom/exif':
         specifier: workspace:*
         version: link:../../packages/exif
+      '@darkroom/filo-payload':
+        specifier: workspace:*
+        version: link:../../packages/filo-payload
       '@darkroom/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -203,6 +209,8 @@ importers:
       '@types/piexifjs':
         specifier: ^1.0.0
         version: 1.0.0
+
+  packages/filo-payload: {}
 
   packages/tsconfig: {}
 

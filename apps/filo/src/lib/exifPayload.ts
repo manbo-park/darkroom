@@ -1,6 +1,7 @@
+import { encodeFiloPayload, type FiloFrame } from '@darkroom/filo-payload';
 import type { Roll, Camera, Film, Lens } from '@/types';
 
-export async function buildExifPayload(
+export function buildExifPayload(
     roll: Roll,
     camera: Camera | undefined,
     film: Film | undefined,
@@ -11,7 +12,7 @@ export async function buildExifPayload(
         const apertureNum = frame.aperture
             ? parseFloat(frame.aperture.replace('f/', ''))
             : undefined;
-        const entry: Record<string, unknown> = { n: frame.frameNumber };
+        const entry: FiloFrame = { n: frame.frameNumber };
         if (frame.timestamp) entry.t = frame.timestamp;
         if (lens) entry.lens = lens.name;
         if (apertureNum != null && !isNaN(apertureNum)) entry.aperture = apertureNum;
@@ -22,36 +23,12 @@ export async function buildExifPayload(
         return entry;
     });
 
-    const payload = {
+    return encodeFiloPayload({
         v: 1,
         roll: {
             camera: { make: camera?.brand ?? '', model: camera?.name ?? '' },
             film: { name: film?.name ?? '', iso: film?.iso ?? 0 },
             frames,
         },
-    };
-
-    const json = JSON.stringify(payload);
-    const encoded = new TextEncoder().encode(json);
-    const cs = new CompressionStream('gzip');
-    const writer = cs.writable.getWriter();
-    writer.write(encoded);
-    writer.close();
-    const chunks: Uint8Array[] = [];
-    const reader = cs.readable.getReader();
-    for (;;) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks.push(value);
-    }
-    const total = chunks.reduce((s, c) => s + c.length, 0);
-    const buf = new Uint8Array(total);
-    let offset = 0;
-    for (const chunk of chunks) {
-        buf.set(chunk, offset);
-        offset += chunk.length;
-    }
-    let binary = '';
-    for (let i = 0; i < buf.length; i++) binary += String.fromCharCode(buf[i]);
-    return 'FILO1:' + btoa(binary);
+    });
 }

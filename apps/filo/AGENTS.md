@@ -57,7 +57,7 @@ src/
 │   └── settingsStore.ts     # 앱 설정 (localStorage, 'filo-settings')
 ├── lib/                 # 순수 유틸리티
 │   ├── idb.ts               # Zustand용 IndexedDB StateStorage 어댑터
-│   └── exifPayload.ts       # EXIF 페이로드 빌드·gzip 압축
+│   └── exifPayload.ts       # Roll → FiloPayload 변환 (인코딩은 @darkroom/filo-payload)
 └── types/index.ts       # 전역 TypeScript 타입 정의
 ```
 

@@ -5,7 +5,7 @@ import { useFrameStore } from '../store/useFrameStore';
 import { useToastStore } from '../store/useToastStore';
 import { useSettingsStore } from '../store/useSettingsStore';
 import { exportFrames } from '../lib/export';
-import { decodeClipboardPayload } from '../lib/clipboard';
+import { decodeFiloPayload } from '@darkroom/filo-payload';
 
 export function FrameToolbar() {
     const frames = useFrameStore((s) => s.frames);
@@ -40,7 +40,7 @@ export function FrameToolbar() {
         if (!trimmed) return;
         setFiloLoading(true);
         try {
-            const payload = await decodeClipboardPayload(trimmed);
+            const payload = await decodeFiloPayload(trimmed);
             if (!payload) {
                 toast('유효하지 않은 filo 데이터입니다');
                 return;
