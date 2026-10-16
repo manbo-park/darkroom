@@ -39,6 +39,7 @@ darkroom/
 │   ├── tsconfig/      # @darkroom/tsconfig — 공유 tsconfig (base.json, node.json)
 │   ├── eslint-config/ # @darkroom/eslint-config — 공유 ESLint flat config
 │   ├── exif/          # @darkroom/exif — EXIF 읽기/쓰기 (React 비의존)
+│   ├── filo-payload/  # @darkroom/filo-payload — filo↔fixif 클립보드 페이로드 규격
 │   └── ui/            # @darkroom/ui — 디자인 토큰(Tailwind preset)·공용 UI 컴포넌트
 ├── pnpm-workspace.yaml
 ├── turbo.json
@@ -70,6 +71,9 @@ pnpm --filter fixif build   # 특정 앱만 빌드
 - **`@darkroom/exif`** — `readExif`·`readThumbnail`(exifr), `writeExif`(piexifjs). 표준 EXIF 필드만 담는 `ExifMeta`를 주고받으며, 쓰기 시 `null` 필드는 태그를 삭제합니다. `@darkroom/ui`처럼 TS 소스를 그대로 export합니다.
   - `write.ts`는 import 시점에 piexifjs `TAGS`에 OffsetTimeOriginal을 등록하므로 `sideEffects: false`를 선언하지 않습니다.
   - EXIF 기록 후 이미지 픽셀 데이터는 원본과 100% 동일해야 합니다(`piexif.insert()` 사용 시 이론상 보장). 쓰기 로직 변경 시 회귀에 유의하세요.
+- **`@darkroom/filo-payload`** — filo→fixif 클립보드 규격의 단일 출처. `FiloPayload` 타입과 `encodeFiloPayload`(filo)·`decodeFiloPayload`(fixif)를 제공합니다.
+  - 형식: JSON → gzip(`CompressionStream`) → base64 → `FILO1:` prefix. 암호화가 아닌 인코딩이므로 민감 정보를 담지 않습니다.
+  - `FILO1:`의 `1`은 스펙 버전입니다. 하위 호환이 깨지는 변경은 `FILO2:` 등으로 구분하고, 디코더는 기존 버전을 계속 받아야 합니다(배포된 filo가 구버전 페이로드를 만들 수 있음).
 
 공유 패키지는 `workspace:*`로 참조합니다.
 

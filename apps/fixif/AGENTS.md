@@ -53,7 +53,6 @@ src/
 │   └── Toast.tsx               # 토스트 (useToastStore 구독 → @darkroom/ui Toast 표시)
 ├── lib/                    # 도메인 로직 (UI 비의존)
 │   ├── export.ts               # 단일/ZIP 내보내기
-│   ├── clipboard.ts            # filo 페이로드 디코딩
 │   ├── matching.ts             # 프레임 번호 ↔ 파일 매칭
 │   ├── filename.ts             # 파일명에서 프레임 번호 추출
 │   ├── validation.ts           # 필드 입력 검증
@@ -64,8 +63,7 @@ src/
 │   ├── useSettingsStore.ts     # 설정 (localStorage 영속화)
 │   └── useToastStore.ts        # 토스트 상태
 └── types/                  # 타입 정의
-    ├── frame.ts                # FrameItem, FrameMeta(= @darkroom/exif의 ExifMeta)
-    └── filo.ts                 # FiloPayload
+    └── frame.ts                # FrameItem, FrameMeta(= @darkroom/exif의 ExifMeta)
 ```
 
 ## 핵심 기능
@@ -97,8 +95,7 @@ src/
 
 ## filo 클립보드 연동 스펙
 
-**페이로드 인코딩**: JSON → gzip(`CompressionStream`) → base64 → `FILO1:` prefix
-- `FILO1:`의 `1`은 스펙 버전. 스펙 변경 시 `FILO2:` 등으로 구분.
+페이로드 타입과 인코딩·디코딩은 `@darkroom/filo-payload`가 담당합니다(루트 [AGENTS.md](../../AGENTS.md#공유-패키지) 참조). fixif는 `decodeFiloPayload`만 사용합니다.
 
 **EXIF 필드 매핑**:
 
@@ -126,5 +123,5 @@ src/
 
 - **이미지 무결성**: EXIF 수정 후 이미지 픽셀 데이터가 원본과 100% 동일해야 합니다. 쓰기 로직은 `packages/exif`에 있으며, 변경 시 회귀에 유의하세요.
 - **원본 불변**: 원본 File 객체는 절대 변형하지 않습니다. 모든 편집은 메모리 상태 레이어에서만 이루어집니다.
-- **클립보드 버전 호환**: `FILO1:` 외 prefix 처리 시 버전 분기를 고려하세요.
+- **클립보드 버전 호환**: `FILO1:` 외 prefix 처리 시 `packages/filo-payload`에서 버전 분기를 고려하세요.
 - 상세 개발 플랜과 열린 이슈는 [.claude/plans/PLAN.md](.claude/plans/PLAN.md)를 참조하세요.
