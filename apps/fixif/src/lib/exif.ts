@@ -40,6 +40,10 @@ export async function readExif(file: File): Promise<FrameMeta> {
 
 export async function readThumbnail(file: File): Promise<string | null> {
     try {
+        // EXIF 썸네일은 센서 방향 그대로 저장되고 자체 Orientation 태그가 없어 브라우저가 회전하지 않는다.
+        // 회전이 필요한 사진은 null을 반환해 브라우저가 방향을 적용하는 generateThumbnail로 넘긴다.
+        const orientation = await exifr.orientation(file);
+        if (orientation && orientation !== 1) return null;
         const thumb = await exifr.thumbnail(file);
         if (thumb) {
             const blob = new Blob([thumb], { type: 'image/jpeg' });
