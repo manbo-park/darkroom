@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useDropzone, type FileRejection } from 'react-dropzone';
-import { readExif, readThumbnail } from '../lib/exif';
+import { readExif, readThumbnail } from '@darkroom/exif';
 import { generateThumbnail } from '../lib/thumbnail';
 import { extractFrameNumber } from '../lib/filename';
 import { useFrameStore } from '../store/useFrameStore';

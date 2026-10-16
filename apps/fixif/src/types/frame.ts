@@ -1,19 +1,9 @@
-export interface GpsCoords {
-    lat: number;
-    lng: number;
-}
+import type { ExifMeta } from '@darkroom/exif';
 
-export interface FrameMeta {
-    dateTimeOriginal: Date | null;
-    make: string | null;
-    model: string | null;
-    lensModel: string | null;
-    fNumber: number | null;
-    exposureTime: string | null;
-    iso: number | null;
-    userComment: string | null;
-    gps: GpsCoords | null;
-}
+export type { GpsCoords } from '@darkroom/exif';
+
+// ponytail: 필드가 표준 EXIF와 1:1이라 매핑 없이 별칭만 둔다. 앱 전용 필드가 생기면 분리.
+export type FrameMeta = ExifMeta;
 
 export interface FrameItem {
     id: string;
