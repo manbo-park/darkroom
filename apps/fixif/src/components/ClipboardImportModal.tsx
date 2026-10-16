@@ -1,9 +1,76 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Info, TriangleAlert } from 'lucide-react';
 import { Button, Modal } from '@darkroom/ui';
 import { useFrameStore } from '../store/useFrameStore';
 import { useToastStore } from '../store/useToastStore';
 import { matchFrames, filoFrameToMetaPatch } from '../lib/matching';
+import type { FrameItem } from '../types/frame';
+
+const PREVIEW_SIZE = 320;
+
+// 썸네일(최대 120px)은 확대하면 뭉개지므로, 호버 중에만 원본 파일을 object URL로 띄운다.
+function FrameThumb({ frame }: { frame: FrameItem }) {
+    const [hover, setHover] = useState<{ rect: DOMRect; url: string } | null>(null);
+
+    // 호버가 끝나거나 컴포넌트가 사라지면 object URL을 해제한다.
+    useEffect(() => {
+        if (!hover) return;
+        return () => URL.revokeObjectURL(hover.url);
+    }, [hover]);
+
+    if (!frame.thumbnailUrl) return <div className="w-8 h-8 shrink-0 rounded bg-film-border" />;
+
+    const rotate = { transform: `rotate(${frame.rotation}deg)` };
+
+    return (
+        <>
+            <div
+                className="w-8 h-8 shrink-0 overflow-hidden rounded cursor-zoom-in"
+                onMouseEnter={(e) =>
+                    setHover({
+                        rect: e.currentTarget.getBoundingClientRect(),
+                        url: URL.createObjectURL(frame.file),
+                    })
+                }
+                onMouseLeave={() => setHover(null)}
+            >
+                <img
+                    src={frame.thumbnailUrl}
+                    alt=""
+                    className="w-full h-full object-cover"
+                    style={rotate}
+                    draggable={false}
+                />
+            </div>
+            {hover &&
+                // Modal 패널의 애니메이션 transform 영향을 받지 않도록 body에 띄운다.
+                createPortal(
+                    <div
+                        className="fixed z-[60] pointer-events-none p-2 rounded-lg bg-film-surface border border-film-border shadow-2xl"
+                        style={{
+                            left: hover.rect.right + 12,
+                            top: Math.max(
+                                8,
+                                Math.min(
+                                    hover.rect.top + hover.rect.height / 2 - PREVIEW_SIZE / 2,
+                                    window.innerHeight - PREVIEW_SIZE - 24,
+                                ),
+                            ),
+                        }}
+                    >
+                        <img
+                            src={hover.url}
+                            alt=""
+                            className="object-contain"
+                            style={{ width: PREVIEW_SIZE, height: PREVIEW_SIZE, ...rotate }}
+                        />
+                    </div>,
+                    document.body,
+                )}
+        </>
+    );
+}
 
 function formatTime(isoString: string): string {
     try {
@@ -172,7 +239,11 @@ export function ClipboardImportModal() {
                             </td>
                             <td className="px-3 py-2.5">
                                 {frameItem ? (
-                                    <span className="text-film-text">{frameItem.file.name}</span>
+                                    <span className="flex items-center gap-2 text-film-text">
+                                        {/* 오프셋 변경 시 다른 파일로 바뀌면 다시 마운트해 URL을 정리한다 */}
+                                        <FrameThumb key={frameItem.id} frame={frameItem} />
+                                        {frameItem.file.name}
+                                    </span>
                                 ) : (
                                     <span className="flex items-center gap-1 text-film-danger">
                                         <Info size={12} className="shrink-0" />
